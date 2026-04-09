@@ -65859,6 +65859,14 @@ declare class RapierRigidBodyComponentSystem extends ComponentSystem {
     DataType: typeof RapierRigidBodyComponentData;
     schema: string[];
     /**
+     * Called by AppBase.onLibrariesLoaded(). For Ammo.js this creates the physics world.
+     * For Rapier, the world is already created in initializeRapier(), so this is a no-op.
+     * Must exist to satisfy PlayCanvas's startup sequence.
+     *
+     * @ignore
+     */
+    onLibraryLoaded(): void;
+    /**
      * Initialize Rapier. Must be called and awaited before physics works.
      * Automatically called if you use `RapierRigidBodyComponentSystem.loadRapier()`.
      *

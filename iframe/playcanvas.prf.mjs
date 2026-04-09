@@ -101194,6 +101194,7 @@ class RapierRigidBodyComponentSystem extends ComponentSystem {
 		get isLoaded() {
 				return this._world !== null;
 		}
+		onLibraryLoaded() {}
 		initializeRapier(RAPIER) {
 				this._RAPIER = RAPIER;
 				const gravity = new RAPIER.Vector3(this.gravity.x, this.gravity.y, this.gravity.z);
