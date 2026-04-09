@@ -55524,7 +55524,7 @@ class AppBase extends EventHandler {
 		}
 		onLibrariesLoaded() {
 				this._librariesLoaded = true;
-				if (this.systems.rigidbody) {
+				if (this.systems.rigidbody?.onLibraryLoaded) {
 						this.systems.rigidbody.onLibraryLoaded();
 				}
 		}
