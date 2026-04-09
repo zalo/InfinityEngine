@@ -1,14 +1,19 @@
 import files from 'examples/files';
 
-const href = window.top?.location.href ?? '';
+// Use the iframe's own location to compute rootPath so it works
+// both standalone and when embedded in the comparison demo wrapper.
+const selfHref = window.location.href;
+const topHref = window.top?.location.href ?? selfHref;
+const href = topHref;
 const params = getQueryParams(href);
-const url = new URL(href);
-const root = url.pathname.replace(/\/([^/]+\.html)?$/g, '');
+
+const selfUrl = new URL(selfHref);
+const selfRoot = selfUrl.pathname.replace(/\/([^/]+\.html)?$/g, '');
 
 /**
  * @type {string}
  */
-export const rootPath = root.replace(/\/iframe/g, '');
+export const rootPath = selfRoot.replace(/\/iframe/g, '');
 
 /**
  * @param {string} url - The URL specified.
