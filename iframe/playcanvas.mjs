@@ -1,6 +1,6 @@
 /**
  * @license
- * PlayCanvas Engine v2.19.0-beta.0 revision fd9f1e4 (RELEASE)
+ * PlayCanvas Engine v2.19.0-beta.0 revision c60f161 (RELEASE)
  * Copyright 2011-2026 PlayCanvas Ltd. All rights reserved.
  *
  * This source code is licensed under the MIT license found in the
@@ -32,7 +32,7 @@ const TRACEID_OCTREE_RESOURCES = 'OctreeResources';
 const TRACEID_GPU_TIMINGS = 'GpuTimings';
 
 const version = '2.19.0-beta.0';
-const revision = 'fd9f1e4';
+const revision = 'c60f161';
 function extend(target, ex) {
 		for(const prop in ex){
 				const copy = ex[prop];
@@ -58556,7 +58556,7 @@ class AnimationComponentData {
 		}
 }
 
-const _schema$k = [
+const _schema$l = [
 		'enabled'
 ];
 class AnimationComponentSystem extends ComponentSystem {
@@ -58573,7 +58573,7 @@ class AnimationComponentSystem extends ComponentSystem {
 								component[property] = data[property];
 						}
 				}
-				super.initializeComponentData(component, data, _schema$k);
+				super.initializeComponentData(component, data, _schema$l);
 		}
 		cloneComponent(entity, clone) {
 				this.addComponent(clone, {});
@@ -58623,12 +58623,12 @@ class AnimationComponentSystem extends ComponentSystem {
 				this.id = 'animation';
 				this.ComponentType = AnimationComponent;
 				this.DataType = AnimationComponentData;
-				this.schema = _schema$k;
+				this.schema = _schema$l;
 				this.on('beforeremove', this.onBeforeRemove, this);
 				this.app.systems.on('update', this.onUpdate, this);
 		}
 }
-Component._buildAccessors(AnimationComponent.prototype, _schema$k);
+Component._buildAccessors(AnimationComponent.prototype, _schema$l);
 
 class AnimNode {
 		get parent() {
@@ -60449,12 +60449,12 @@ class AnimComponentData {
 		}
 }
 
-const _schema$j = [
+const _schema$k = [
 		'enabled'
 ];
 class AnimComponentSystem extends ComponentSystem {
 		initializeComponentData(component, data, properties) {
-				super.initializeComponentData(component, data, _schema$j);
+				super.initializeComponentData(component, data, _schema$k);
 				const complexProperties = [
 						'animationAssets',
 						'stateGraph',
@@ -60566,12 +60566,12 @@ class AnimComponentSystem extends ComponentSystem {
 				this.id = 'anim';
 				this.ComponentType = AnimComponent;
 				this.DataType = AnimComponentData;
-				this.schema = _schema$j;
+				this.schema = _schema$k;
 				this.on('beforeremove', this.onBeforeRemove, this);
 				this.app.systems.on('animationUpdate', this.onAnimationUpdate, this);
 		}
 }
-Component._buildAccessors(AnimComponent.prototype, _schema$j);
+Component._buildAccessors(AnimComponent.prototype, _schema$k);
 
 class AudioListenerComponent extends Component {
 		setCurrentListener() {
@@ -60597,7 +60597,7 @@ class AudioListenerComponentData {
 		}
 }
 
-const _schema$i = [
+const _schema$j = [
 		'enabled'
 ];
 class AudioListenerComponentSystem extends ComponentSystem {
@@ -60624,13 +60624,13 @@ class AudioListenerComponentSystem extends ComponentSystem {
 				this.id = 'audiolistener';
 				this.ComponentType = AudioListenerComponent;
 				this.DataType = AudioListenerComponentData;
-				this.schema = _schema$i;
+				this.schema = _schema$j;
 				this.manager = app.soundManager;
 				this.current = null;
 				this.app.systems.on('update', this.onUpdate, this);
 		}
 }
-Component._buildAccessors(AudioListenerComponent.prototype, _schema$i);
+Component._buildAccessors(AudioListenerComponent.prototype, _schema$j);
 
 const BUTTON_TRANSITION_MODE_TINT = 0;
 const BUTTON_TRANSITION_MODE_SPRITE_CHANGE = 1;
@@ -61233,7 +61233,7 @@ class ButtonComponentData {
 		}
 }
 
-const _schema$h = [
+const _schema$i = [
 		'enabled',
 		'active',
 		{
@@ -61264,7 +61264,7 @@ const _schema$h = [
 class ButtonComponentSystem extends ComponentSystem {
 		initializeComponentData(component, data, properties) {
 				component.imageEntity = data.imageEntity;
-				super.initializeComponentData(component, data, _schema$h);
+				super.initializeComponentData(component, data, _schema$i);
 		}
 		onUpdate(dt) {
 				const components = this.store;
@@ -61288,14 +61288,14 @@ class ButtonComponentSystem extends ComponentSystem {
 				this.id = 'button';
 				this.ComponentType = ButtonComponent;
 				this.DataType = ButtonComponentData;
-				this.schema = _schema$h;
+				this.schema = _schema$i;
 				this.on('beforeremove', this._onRemoveComponent, this);
 				this.app.systems.on('update', this.onUpdate, this);
 		}
 }
 
 const _vec3$1 = new Vec3();
-const _quat = new Quat();
+const _quat$1 = new Quat();
 class CollisionComponent extends Component {
 		get data() {
 				const record = this.system.store[this.entity.getGuid()];
@@ -61562,7 +61562,7 @@ class CollisionComponent extends Component {
 				if (this._hasOffset) {
 						const rot = this.entity.getRotation();
 						const lo = this.data.linearOffset;
-						_quat.copy(rot).transformVector(lo, _vec3$1);
+						_quat$1.copy(rot).transformVector(lo, _vec3$1);
 						return _vec3$1.add(pos);
 				}
 				return pos;
@@ -61570,7 +61570,7 @@ class CollisionComponent extends Component {
 		getShapeRotation() {
 				const rot = this.entity.getRotation();
 				if (this._hasOffset) {
-						return _quat.copy(rot).mul(this.data.angularOffset);
+						return _quat$1.copy(rot).mul(this.data.angularOffset);
 				}
 				return rot;
 		}
@@ -61811,7 +61811,7 @@ const p1 = new Vec3();
 const p2 = new Vec3();
 const quat$1 = new Quat();
 const tempGraphNode = new GraphNode();
-const _schema$g = [
+const _schema$h = [
 		'enabled',
 		'type',
 		'halfExtents',
@@ -62521,7 +62521,7 @@ class CollisionComponentSystem extends ComponentSystem {
 				this.id = 'collision';
 				this.ComponentType = CollisionComponent;
 				this.DataType = CollisionComponentData;
-				this.schema = _schema$g;
+				this.schema = _schema$h;
 				this.implementations = {};
 				this._triMeshCache = {};
 				this.on('beforeremove', this.onBeforeRemove, this);
@@ -67052,7 +67052,7 @@ class ElementComponentData {
 		}
 }
 
-const _schema$f = [
+const _schema$g = [
 		'enabled'
 ];
 class ElementComponentSystem extends ComponentSystem {
@@ -67496,7 +67496,7 @@ class ElementComponentSystem extends ComponentSystem {
 				this.id = 'element';
 				this.ComponentType = ElementComponent;
 				this.DataType = ElementComponentData;
-				this.schema = _schema$f;
+				this.schema = _schema$g;
 				this._unicodeConverter = null;
 				this._rtlReorder = null;
 				this._defaultTexture = new Texture(app.graphicsDevice, {
@@ -67981,13 +67981,13 @@ class JointComponentData {
 		}
 }
 
-const _schema$e = [
+const _schema$f = [
 		'enabled'
 ];
 class JointComponentSystem extends ComponentSystem {
 		initializeComponentData(component, data, properties) {
 				component.initFromData(data);
-				super.initializeComponentData(component, data, _schema$e);
+				super.initializeComponentData(component, data, _schema$f);
 		}
 		constructor(app){
 				super(app);
@@ -67995,10 +67995,10 @@ class JointComponentSystem extends ComponentSystem {
 				this.app = app;
 				this.ComponentType = JointComponent;
 				this.DataType = JointComponentData;
-				this.schema = _schema$e;
+				this.schema = _schema$f;
 		}
 }
-Component._buildAccessors(JointComponent.prototype, _schema$e);
+Component._buildAccessors(JointComponent.prototype, _schema$f);
 
 class LayoutChildComponent extends Component {
 		set minWidth(value) {
@@ -68075,7 +68075,7 @@ class LayoutChildComponentData {
 		}
 }
 
-const _schema$d = [
+const _schema$e = [
 		'enabled'
 ];
 class LayoutChildComponentSystem extends ComponentSystem {
@@ -68108,10 +68108,10 @@ class LayoutChildComponentSystem extends ComponentSystem {
 				this.id = 'layoutchild';
 				this.ComponentType = LayoutChildComponent;
 				this.DataType = LayoutChildComponentData;
-				this.schema = _schema$d;
+				this.schema = _schema$e;
 		}
 }
-Component._buildAccessors(LayoutChildComponent.prototype, _schema$d);
+Component._buildAccessors(LayoutChildComponent.prototype, _schema$e);
 
 const FITTING_NONE = 0;
 const FITTING_STRETCH = 1;
@@ -68744,7 +68744,7 @@ class LayoutGroupComponentData {
 		}
 }
 
-const _schema$c = [
+const _schema$d = [
 		'enabled'
 ];
 const MAX_ITERATIONS = 100;
@@ -68823,13 +68823,13 @@ class LayoutGroupComponentSystem extends ComponentSystem {
 				this.id = 'layoutgroup';
 				this.ComponentType = LayoutGroupComponent;
 				this.DataType = LayoutGroupComponentData;
-				this.schema = _schema$c;
+				this.schema = _schema$d;
 				this._reflowQueue = [];
 				this.on('beforeremove', this._onRemoveComponent, this);
 				this.app.systems.on('postUpdate', this._onPostUpdate, this);
 		}
 }
-Component._buildAccessors(LayoutGroupComponent.prototype, _schema$c);
+Component._buildAccessors(LayoutGroupComponent.prototype, _schema$d);
 
 class PrimitivesCache {
 		destroy(device) {
@@ -69569,7 +69569,7 @@ class ModelComponentData {
 		}
 }
 
-const _schema$b = [
+const _schema$c = [
 		'enabled'
 ];
 class ModelComponentSystem extends ComponentSystem {
@@ -69661,12 +69661,12 @@ class ModelComponentSystem extends ComponentSystem {
 				this.id = 'model';
 				this.ComponentType = ModelComponent;
 				this.DataType = ModelComponentData;
-				this.schema = _schema$b;
+				this.schema = _schema$c;
 				this.defaultMaterial = getDefaultMaterial(app.graphicsDevice);
 				this.on('beforeremove', this.onRemove, this);
 		}
 }
-Component._buildAccessors(ModelComponent.prototype, _schema$b);
+Component._buildAccessors(ModelComponent.prototype, _schema$c);
 
 const SIMPLE_PROPERTIES = [
 		'emitterExtents',
@@ -72590,7 +72590,7 @@ const particleChunksWGSL = {
 		particle_wrapVS
 };
 
-const _schema$a = [
+const _schema$b = [
 		'enabled',
 		'autoPlay',
 		'numParticles',
@@ -72770,7 +72770,7 @@ class ParticleSystemComponentSystem extends ComponentSystem {
 				this.id = 'particlesystem';
 				this.ComponentType = ParticleSystemComponent;
 				this.DataType = ParticleSystemComponentData;
-				this.schema = _schema$a;
+				this.schema = _schema$b;
 				this.propertyTypes = {
 						emitterExtents: 'vec3',
 						emitterExtentsInner: 'vec3',
@@ -73487,7 +73487,7 @@ class RenderComponentData {
 		}
 }
 
-const _schema$9 = [
+const _schema$a = [
 		'enabled'
 ];
 const _properties$1 = [
@@ -73523,7 +73523,7 @@ class RenderComponentSystem extends ComponentSystem {
 				if (_data.aabbCenter && _data.aabbHalfExtents) {
 						component.customAabb = new BoundingBox(new Vec3(_data.aabbCenter), new Vec3(_data.aabbHalfExtents));
 				}
-				super.initializeComponentData(component, _data, _schema$9);
+				super.initializeComponentData(component, _data, _schema$a);
 		}
 		cloneComponent(entity, clone) {
 				const data = {};
@@ -73552,12 +73552,12 @@ class RenderComponentSystem extends ComponentSystem {
 				this.id = 'render';
 				this.ComponentType = RenderComponent;
 				this.DataType = RenderComponentData;
-				this.schema = _schema$9;
+				this.schema = _schema$a;
 				this.defaultMaterial = getDefaultMaterial(app.graphicsDevice);
 				this.on('beforeremove', this.onRemove, this);
 		}
 }
-Component._buildAccessors(RenderComponent.prototype, _schema$9);
+Component._buildAccessors(RenderComponent.prototype, _schema$a);
 
 class ObjectPool {
 		_resize(size) {
@@ -74119,7 +74119,7 @@ class ContactResult {
 				this.contacts = contacts;
 		}
 }
-const _schema$8 = [
+const _schema$9 = [
 		'enabled'
 ];
 class RigidBodyComponentSystem extends ComponentSystem {
@@ -74592,14 +74592,14 @@ class RigidBodyComponentSystem extends ComponentSystem {
 				this.contactPointPool = null;
 				this.contactResultPool = null;
 				this.singleContactResultPool = null;
-				this.schema = _schema$8;
+				this.schema = _schema$9;
 				this.collisions = {};
 				this.frameCollisions = {};
 				this.on('beforeremove', this.onBeforeRemove, this);
 		}
 }
 RigidBodyComponentSystem.EVENT_CONTACT = 'contact';
-Component._buildAccessors(RigidBodyComponent.prototype, _schema$8);
+Component._buildAccessors(RigidBodyComponent.prototype, _schema$9);
 
 const SCALEMODE_NONE = 'none';
 const SCALEMODE_BLEND = 'blend';
@@ -74784,7 +74784,7 @@ class ScreenComponentData {
 		}
 }
 
-const _schema$7 = [
+const _schema$8 = [
 		'enabled'
 ];
 class ScreenComponentSystem extends ComponentSystem {
@@ -74812,7 +74812,7 @@ class ScreenComponentSystem extends ComponentSystem {
 				}
 				this._updateDescendantElements(component.entity, component.entity);
 				component.syncDrawOrder();
-				super.initializeComponentData(component, data, _schema$7);
+				super.initializeComponentData(component, data, _schema$8);
 		}
 		_updateDescendantElements(entity, screenEntity) {
 				const children = entity.children;
@@ -74880,7 +74880,7 @@ class ScreenComponentSystem extends ComponentSystem {
 				this.id = 'screen';
 				this.ComponentType = ScreenComponent;
 				this.DataType = ScreenComponentData;
-				this.schema = _schema$7;
+				this.schema = _schema$8;
 				this.windowResolution = new Vec2();
 				this._drawOrderSyncQueue = new IndexedList();
 				this.app.graphicsDevice.on('resizecanvas', this._onResize, this);
@@ -74888,7 +74888,7 @@ class ScreenComponentSystem extends ComponentSystem {
 				this.on('beforeremove', this.onRemoveComponent, this);
 		}
 }
-Component._buildAccessors(ScreenComponent.prototype, _schema$7);
+Component._buildAccessors(ScreenComponent.prototype, _schema$8);
 
 const _inputScreenPosition = new Vec2();
 const _inputWorldPosition = new Vec3();
@@ -75833,7 +75833,7 @@ class ScrollViewComponentData {
 		}
 }
 
-const _schema$6 = [
+const _schema$7 = [
 		{
 				name: 'enabled',
 				type: 'boolean'
@@ -75891,7 +75891,7 @@ class ScrollViewComponentSystem extends ComponentSystem {
 				if (data.mouseWheelSensitivity === undefined) {
 						data.mouseWheelSensitivity = new Vec2(1, 1);
 				}
-				super.initializeComponentData(component, data, _schema$6);
+				super.initializeComponentData(component, data, _schema$7);
 				component.viewportEntity = data.viewportEntity;
 				component.contentEntity = data.contentEntity;
 				component.horizontalScrollbarEntity = data.horizontalScrollbarEntity;
@@ -75919,7 +75919,7 @@ class ScrollViewComponentSystem extends ComponentSystem {
 				this.id = 'scrollview';
 				this.ComponentType = ScrollViewComponent;
 				this.DataType = ScrollViewComponentData;
-				this.schema = _schema$6;
+				this.schema = _schema$7;
 				this.on('beforeremove', this._onRemoveComponent, this);
 				this.app.systems.on('update', this.onUpdate, this);
 		}
@@ -76146,7 +76146,7 @@ class ScrollbarComponentData {
 		}
 }
 
-const _schema$5 = [
+const _schema$6 = [
 		{
 				name: 'enabled',
 				type: 'boolean'
@@ -76166,7 +76166,7 @@ const _schema$5 = [
 ];
 class ScrollbarComponentSystem extends ComponentSystem {
 		initializeComponentData(component, data, properties) {
-				super.initializeComponentData(component, data, _schema$5);
+				super.initializeComponentData(component, data, _schema$6);
 				component.handleEntity = data.handleEntity;
 		}
 		_onAddComponent(entity) {
@@ -76180,7 +76180,7 @@ class ScrollbarComponentSystem extends ComponentSystem {
 				this.id = 'scrollbar';
 				this.ComponentType = ScrollbarComponent;
 				this.DataType = ScrollbarComponentData;
-				this.schema = _schema$5;
+				this.schema = _schema$6;
 				this.on('add', this._onAddComponent, this);
 				this.on('beforeremove', this._onRemoveComponent, this);
 		}
@@ -76822,7 +76822,7 @@ class SoundComponentData {
 		}
 }
 
-const _schema$4 = [
+const _schema$5 = [
 		'enabled'
 ];
 class SoundComponentSystem extends ComponentSystem {
@@ -76926,13 +76926,13 @@ class SoundComponentSystem extends ComponentSystem {
 				this.id = 'sound';
 				this.ComponentType = SoundComponent;
 				this.DataType = SoundComponentData;
-				this.schema = _schema$4;
+				this.schema = _schema$5;
 				this.manager = app.soundManager;
 				this.app.systems.on('update', this.onUpdate, this);
 				this.on('beforeremove', this.onBeforeRemove, this);
 		}
 }
-Component._buildAccessors(SoundComponent.prototype, _schema$4);
+Component._buildAccessors(SoundComponent.prototype, _schema$5);
 
 const SPRITETYPE_SIMPLE = 'simple';
 const SPRITETYPE_ANIMATED = 'animated';
@@ -77816,7 +77816,7 @@ class SpriteComponentData {
 		}
 }
 
-const _schema$3 = [
+const _schema$4 = [
 		'enabled'
 ];
 class SpriteComponentSystem extends ComponentSystem {
@@ -77987,7 +77987,7 @@ class SpriteComponentSystem extends ComponentSystem {
 				this.id = 'sprite';
 				this.ComponentType = SpriteComponent;
 				this.DataType = SpriteComponentData;
-				this.schema = _schema$3;
+				this.schema = _schema$4;
 				this._defaultTexture = null;
 				this._defaultMaterial = null;
 				this._default9SlicedMaterialSlicedMode = null;
@@ -77996,7 +77996,7 @@ class SpriteComponentSystem extends ComponentSystem {
 				this.on('beforeremove', this.onBeforeRemove, this);
 		}
 }
-Component._buildAccessors(SpriteComponent.prototype, _schema$3);
+Component._buildAccessors(SpriteComponent.prototype, _schema$4);
 
 class ZoneComponent extends Component {
 		set size(data) {
@@ -78048,7 +78048,7 @@ class ZoneComponentData {
 		}
 }
 
-const _schema$2 = [
+const _schema$3 = [
 		'enabled'
 ];
 class ZoneComponentSystem extends ComponentSystem {
@@ -78077,11 +78077,11 @@ class ZoneComponentSystem extends ComponentSystem {
 				this.id = 'zone';
 				this.ComponentType = ZoneComponent;
 				this.DataType = ZoneComponentData;
-				this.schema = _schema$2;
+				this.schema = _schema$3;
 				this.on('beforeremove', this._onBeforeRemove, this);
 		}
 }
-Component._buildAccessors(ZoneComponent.prototype, _schema$2);
+Component._buildAccessors(ZoneComponent.prototype, _schema$3);
 
 class PostEffectEntry {
 		constructor(effect, inputTarget){
@@ -78759,7 +78759,7 @@ class CameraComponentData {
 		}
 }
 
-const _schema$1 = [
+const _schema$2 = [
 		'enabled'
 ];
 class CameraComponentSystem extends ComponentSystem {
@@ -78891,12 +78891,12 @@ class CameraComponentSystem extends ComponentSystem {
 				this.id = 'camera';
 				this.ComponentType = CameraComponent;
 				this.DataType = CameraComponentData;
-				this.schema = _schema$1;
+				this.schema = _schema$2;
 				this.on('beforeremove', this.onBeforeRemove, this);
 				this.app.on('prerender', this.onAppPrerender, this);
 		}
 }
-Component._buildAccessors(CameraComponent.prototype, _schema$1);
+Component._buildAccessors(CameraComponent.prototype, _schema$2);
 
 class LightComponentData {
 		constructor(){
@@ -89235,7 +89235,7 @@ const gsplatChunksWGSL = {
 		gsplatContainerFloatReadVS
 };
 
-const _schema = [
+const _schema$1 = [
 		'enabled'
 ];
 const _properties = [
@@ -89262,7 +89262,7 @@ class GSplatComponentSystem extends ComponentSystem {
 				if (_data.aabbCenter && _data.aabbHalfExtents) {
 						component.customAabb = new BoundingBox(new Vec3(_data.aabbCenter), new Vec3(_data.aabbHalfExtents));
 				}
-				super.initializeComponentData(component, _data, _schema);
+				super.initializeComponentData(component, _data, _schema$1);
 		}
 		cloneComponent(entity, clone) {
 				const gSplatComponent = entity.gsplat;
@@ -89303,7 +89303,7 @@ class GSplatComponentSystem extends ComponentSystem {
 				this.id = 'gsplat';
 				this.ComponentType = GSplatComponent;
 				this.DataType = GSplatComponentData;
-				this.schema = _schema;
+				this.schema = _schema$1;
 				app.renderer.gsplatDirector = new GSplatDirector(app.graphicsDevice, app.renderer, app.scene, this);
 				ShaderChunks.get(app.graphicsDevice, SHADERLANGUAGE_GLSL).add(gsplatChunksGLSL);
 				ShaderChunks.get(app.graphicsDevice, SHADERLANGUAGE_WGSL).add(gsplatChunksWGSL);
@@ -89312,7 +89312,7 @@ class GSplatComponentSystem extends ComponentSystem {
 }
 GSplatComponentSystem.EVENT_MATERIALCREATED = 'material:created';
 GSplatComponentSystem.EVENT_FRAMEREADY = 'frame:ready';
-Component._buildAccessors(GSplatComponent.prototype, _schema);
+Component._buildAccessors(GSplatComponent.prototype, _schema$1);
 
 class Render extends EventHandler {
 		set meshes(value) {
@@ -100619,6 +100619,697 @@ class RapierBackend extends PhysicsBackend {
 		}
 		constructor(...args){
 				super(...args), this._RAPIER = null, this._world = null, this._eventQueue = null, this._bodyMap = new Map(), this._contacts = [];
+		}
+}
+
+new Vec3();
+const _quat = new Quat();
+class RapierCollisionComponentData {
+		constructor(){
+				this.enabled = true;
+				this.type = 'box';
+				this.halfExtents = new Vec3(0.5, 0.5, 0.5);
+				this.radius = 0.5;
+				this.height = 2;
+				this.axis = 1;
+				this.linearOffset = new Vec3();
+				this.angularOffset = new Quat();
+				this.initialized = false;
+		}
+}
+class RapierCollisionComponent extends Component {
+		get type() {
+				return this._type;
+		}
+		set type(v) {
+				this._type = v;
+				this._rebuild();
+		}
+		get halfExtents() {
+				return this._halfExtents;
+		}
+		set halfExtents(v) {
+				this._halfExtents.copy(v);
+				this._rebuild();
+		}
+		get radius() {
+				return this._radius;
+		}
+		set radius(v) {
+				this._radius = v;
+				this._rebuild();
+		}
+		get height() {
+				return this._height;
+		}
+		set height(v) {
+				this._height = v;
+				this._rebuild();
+		}
+		get axis() {
+				return this._axis;
+		}
+		set axis(v) {
+				this._axis = v;
+				this._rebuild();
+		}
+		get linearOffset() {
+				return this._linearOffset;
+		}
+		set linearOffset(v) {
+				this._linearOffset.copy(v);
+		}
+		get angularOffset() {
+				return this._angularOffset;
+		}
+		set angularOffset(v) {
+				this._angularOffset.copy(v);
+		}
+		_rebuild() {
+				if (this.entity?.rigidbody) {
+						this.entity.rigidbody._rebuildBody();
+				}
+		}
+		constructor(...args){
+				super(...args), this._type = 'box', this._halfExtents = new Vec3(0.5, 0.5, 0.5), this._radius = 0.5, this._height = 2, this._axis = 1, this._linearOffset = new Vec3(), this._angularOffset = new Quat();
+		}
+}
+class RapierCollisionComponentSystem extends ComponentSystem {
+		initializeComponentData(component, data, properties) {
+				if (data.type !== undefined) component._type = data.type;
+				if (data.halfExtents) {
+						if (Array.isArray(data.halfExtents)) component._halfExtents.set(data.halfExtents[0], data.halfExtents[1], data.halfExtents[2]);
+						else component._halfExtents.copy(data.halfExtents);
+				}
+				if (data.radius !== undefined) component._radius = data.radius;
+				if (data.height !== undefined) component._height = data.height;
+				if (data.axis !== undefined) component._axis = data.axis;
+				if (data.linearOffset) {
+						if (Array.isArray(data.linearOffset)) component._linearOffset.set(data.linearOffset[0], data.linearOffset[1], data.linearOffset[2]);
+						else component._linearOffset.copy(data.linearOffset);
+				}
+				if (data.angularOffset) {
+						if (Array.isArray(data.angularOffset)) component._angularOffset.set(data.angularOffset[0], data.angularOffset[1], data.angularOffset[2], data.angularOffset[3]);
+						else component._angularOffset.copy(data.angularOffset);
+				}
+				super.initializeComponentData(component, data, [
+						'enabled'
+				]);
+				if (component.entity.rigidbody) {
+						component.entity.rigidbody._rebuildBody();
+				}
+		}
+		cloneComponent(entity, clone) {
+				const src = entity.collision;
+				return this.addComponent(clone, {
+						enabled: src.enabled,
+						type: src.type,
+						halfExtents: [
+								src.halfExtents.x,
+								src.halfExtents.y,
+								src.halfExtents.z
+						],
+						radius: src.radius,
+						height: src.height,
+						axis: src.axis,
+						linearOffset: [
+								src.linearOffset.x,
+								src.linearOffset.y,
+								src.linearOffset.z
+						],
+						angularOffset: [
+								src.angularOffset.x,
+								src.angularOffset.y,
+								src.angularOffset.z,
+								src.angularOffset.w
+						]
+				});
+		}
+		constructor(app){
+				super(app);
+				this.id = 'collision';
+				this.ComponentType = RapierCollisionComponent;
+				this.DataType = RapierCollisionComponentData;
+				this.schema = [
+						'enabled',
+						'type',
+						'halfExtents',
+						'linearOffset',
+						'angularOffset',
+						'radius',
+						'axis',
+						'height'
+				];
+		}
+}
+class RapierRigidBodyComponentData {
+		constructor(){
+				this.enabled = true;
+				this.type = BODYTYPE_STATIC;
+				this.mass = 1;
+				this.linearDamping = 0;
+				this.angularDamping = 0;
+				this.linearFactor = new Vec3(1, 1, 1);
+				this.angularFactor = new Vec3(1, 1, 1);
+				this.friction = 0.5;
+				this.rollingFriction = 0;
+				this.restitution = 0;
+				this.group = 1;
+				this.mask = 65535;
+		}
+}
+const _schema = [
+		'enabled',
+		'type',
+		'mass',
+		'linearDamping',
+		'angularDamping',
+		'linearFactor',
+		'angularFactor',
+		'friction',
+		'rollingFriction',
+		'restitution',
+		'group',
+		'mask'
+];
+class RapierRigidBodyComponent extends Component {
+		get type() {
+				return this._type;
+		}
+		set type(v) {
+				if (this._type !== v) {
+						this._type = v;
+						this._rebuildBody();
+				}
+		}
+		get mass() {
+				return this._mass;
+		}
+		set mass(v) {
+				this._mass = v;
+				this._updateMass();
+		}
+		get linearDamping() {
+				return this._linearDamping;
+		}
+		set linearDamping(v) {
+				this._linearDamping = v;
+				const body = this._getRapierBody();
+				if (body) body.setLinearDamping(v);
+		}
+		get angularDamping() {
+				return this._angularDamping;
+		}
+		set angularDamping(v) {
+				this._angularDamping = v;
+				const body = this._getRapierBody();
+				if (body) body.setAngularDamping(v);
+		}
+		get friction() {
+				return this._friction;
+		}
+		set friction(v) {
+				this._friction = v;
+		}
+		get restitution() {
+				return this._restitution;
+		}
+		set restitution(v) {
+				this._restitution = v;
+		}
+		get linearVelocity() {
+				const body = this._getRapierBody();
+				if (body) {
+						const v = body.linvel();
+						return new Vec3(v.x, v.y, v.z);
+				}
+				return Vec3.ZERO;
+		}
+		set linearVelocity(v) {
+				const body = this._getRapierBody();
+				if (body) {
+						body.setLinvel({
+								x: v.x,
+								y: v.y,
+								z: v.z
+						}, true);
+				}
+		}
+		get angularVelocity() {
+				const body = this._getRapierBody();
+				if (body) {
+						const v = body.angvel();
+						return new Vec3(v.x, v.y, v.z);
+				}
+				return Vec3.ZERO;
+		}
+		set angularVelocity(v) {
+				const body = this._getRapierBody();
+				if (body) {
+						body.setAngvel({
+								x: v.x,
+								y: v.y,
+								z: v.z
+						}, true);
+				}
+		}
+		get linearFactor() {
+				return this._linearFactor;
+		}
+		set linearFactor(v) {
+				this._linearFactor.copy(v);
+		}
+		get angularFactor() {
+				return this._angularFactor;
+		}
+		set angularFactor(v) {
+				this._angularFactor.copy(v);
+		}
+		isActive() {
+				const body = this._getRapierBody();
+				return body ? !body.isSleeping() : false;
+		}
+		activate() {
+				const body = this._getRapierBody();
+				if (body) body.wakeUp();
+		}
+		applyForce(x, y, z) {
+				const body = this._getRapierBody();
+				if (!body) return;
+				if (x instanceof Vec3) {
+						z = x.z;
+						y = x.y;
+						x = x.x;
+				}
+				body.addForce({
+						x,
+						y,
+						z
+				}, true);
+		}
+		applyImpulse(x, y, z) {
+				const body = this._getRapierBody();
+				if (!body) return;
+				if (x instanceof Vec3) {
+						z = x.z;
+						y = x.y;
+						x = x.x;
+				}
+				body.applyImpulse({
+						x,
+						y,
+						z
+				}, true);
+		}
+		applyTorque(x, y, z) {
+				const body = this._getRapierBody();
+				if (!body) return;
+				if (x instanceof Vec3) {
+						z = x.z;
+						y = x.y;
+						x = x.x;
+				}
+				body.addTorque({
+						x,
+						y,
+						z
+				}, true);
+		}
+		applyTorqueImpulse(x, y, z) {
+				const body = this._getRapierBody();
+				if (!body) return;
+				if (x instanceof Vec3) {
+						z = x.z;
+						y = x.y;
+						x = x.x;
+				}
+				body.applyTorqueImpulse({
+						x,
+						y,
+						z
+				}, true);
+		}
+		teleport(x, y, z, rx, ry, rz) {
+				if (x instanceof Vec3) {
+						rz = z;
+						ry = y;
+						rx = x.z;
+						z = x.z;
+						y = x.y;
+						x = x.x;
+				}
+				const body = this._getRapierBody();
+				if (!body) return;
+				body.setTranslation({
+						x,
+						y,
+						z
+				}, true);
+				if (rx !== undefined) {
+						_quat.setFromEulerAngles(rx, ry, rz);
+						body.setRotation({
+								x: _quat.x,
+								y: _quat.y,
+								z: _quat.z,
+								w: _quat.w
+						}, true);
+				}
+				this.entity.setPosition(x, y, z);
+				if (rx !== undefined) {
+						this.entity.setEulerAngles(rx, ry, rz);
+				}
+				body.wakeUp();
+		}
+		_getRapierBody() {
+				const world = this.system._world;
+				if (!world || this._bodyHandle < 0) return null;
+				return world.getRigidBody(this._bodyHandle);
+		}
+		_rebuildBody() {
+				if (this._simulated) {
+						this.system._removeBody(this);
+				}
+				if (this.enabled && this.entity?.enabled) {
+						this.system._createBody(this);
+				}
+		}
+		_updateMass() {
+				const body = this._getRapierBody();
+				if (body && this._type === BODYTYPE_DYNAMIC) {
+						body.setAdditionalMass(this._mass);
+				}
+		}
+		onEnable() {
+				if (!this._simulated && this.system._world) {
+						this.system._createBody(this);
+				}
+		}
+		onDisable() {
+				if (this._simulated) {
+						this.system._removeBody(this);
+				}
+		}
+		constructor(...args){
+				super(...args), this._type = BODYTYPE_STATIC, this._mass = 1, this._linearDamping = 0, this._angularDamping = 0, this._linearFactor = new Vec3(1, 1, 1), this._angularFactor = new Vec3(1, 1, 1), this._friction = 0.5, this._rollingFriction = 0, this._restitution = 0, this._group = 1, this._mask = 65535, this._bodyHandle = -1, this._colliderHandle = -1, this._simulated = false, this._wasActive = true;
+		}
+}
+RapierRigidBodyComponent.EVENT_CONTACT = 'contact';
+RapierRigidBodyComponent.EVENT_COLLISION_START = 'collisionstart';
+RapierRigidBodyComponent.EVENT_COLLISION_END = 'collisionend';
+RapierRigidBodyComponent.EVENT_TRIGGER_ENTER = 'triggerenter';
+RapierRigidBodyComponent.EVENT_TRIGGER_LEAVE = 'triggerleave';
+class RapierRigidBodyComponentSystem extends ComponentSystem {
+		get isLoaded() {
+				return this._world !== null;
+		}
+		initializeRapier(RAPIER) {
+				this._RAPIER = RAPIER;
+				const gravity = new RAPIER.Vector3(this.gravity.x, this.gravity.y, this.gravity.z);
+				this._world = new RAPIER.World(gravity);
+				this._eventQueue = new RAPIER.EventQueue(true);
+				this.app.systems.on('update', this._onUpdate, this);
+		}
+		async loadRapier(importPath) {
+				const path = importPath || '@dimforge/rapier3d-compat';
+				let RAPIER;
+				try {
+						RAPIER = await import('@dimforge/rapier3d-deterministic');
+				} catch  {
+						try {
+								RAPIER = await import(/* @vite-ignore */ /* webpackIgnore: true */ path);
+						} catch (e) {
+								console.error('Failed to load Rapier:', e);
+								return;
+						}
+				}
+				await RAPIER.init();
+				this.initializeRapier(RAPIER);
+		}
+		initializeComponentData(component, data, properties) {
+				if (data.type !== undefined) component._type = data.type;
+				if (data.mass !== undefined) component._mass = data.mass;
+				if (data.linearDamping !== undefined) component._linearDamping = data.linearDamping;
+				if (data.angularDamping !== undefined) component._angularDamping = data.angularDamping;
+				if (data.friction !== undefined) component._friction = data.friction;
+				if (data.rollingFriction !== undefined) component._rollingFriction = data.rollingFriction;
+				if (data.restitution !== undefined) component._restitution = data.restitution;
+				if (data.group !== undefined) component._group = data.group;
+				if (data.mask !== undefined) component._mask = data.mask;
+				if (data.linearFactor) {
+						if (data.linearFactor instanceof Vec3) component._linearFactor.copy(data.linearFactor);
+						else component._linearFactor.set(data.linearFactor[0], data.linearFactor[1], data.linearFactor[2]);
+				}
+				if (data.angularFactor) {
+						if (data.angularFactor instanceof Vec3) component._angularFactor.copy(data.angularFactor);
+						else component._angularFactor.set(data.angularFactor[0], data.angularFactor[1], data.angularFactor[2]);
+				}
+				super.initializeComponentData(component, data, [
+						'enabled'
+				]);
+				if (this._world && component.enabled && component.entity.enabled) {
+						this._createBody(component);
+				}
+		}
+		cloneComponent(entity, clone) {
+				const src = entity.rigidbody;
+				return this.addComponent(clone, {
+						enabled: src.enabled,
+						type: src.type,
+						mass: src.mass,
+						linearDamping: src.linearDamping,
+						angularDamping: src.angularDamping,
+						linearFactor: [
+								src.linearFactor.x,
+								src.linearFactor.y,
+								src.linearFactor.z
+						],
+						angularFactor: [
+								src.angularFactor.x,
+								src.angularFactor.y,
+								src.angularFactor.z
+						],
+						friction: src.friction,
+						rollingFriction: src.rollingFriction,
+						restitution: src.restitution,
+						group: src.group,
+						mask: src.mask
+				});
+		}
+		_createBody(component) {
+				if (!this._world || !this._RAPIER) return;
+				const RAPIER = this._RAPIER;
+				const entity = component.entity;
+				const pos = entity.getPosition();
+				const rot = entity.getRotation();
+				let bodyDesc;
+				switch(component._type){
+						case BODYTYPE_DYNAMIC:
+								bodyDesc = RAPIER.RigidBodyDesc.dynamic();
+								break;
+						case BODYTYPE_KINEMATIC:
+								bodyDesc = RAPIER.RigidBodyDesc.kinematicPositionBased();
+								break;
+						default:
+								bodyDesc = RAPIER.RigidBodyDesc.fixed();
+								break;
+				}
+				bodyDesc.setTranslation(pos.x, pos.y, pos.z);
+				bodyDesc.setRotation({
+						x: rot.x,
+						y: rot.y,
+						z: rot.z,
+						w: rot.w
+				});
+				bodyDesc.setLinearDamping(component._linearDamping);
+				bodyDesc.setAngularDamping(component._angularDamping);
+				const body = this._world.createRigidBody(bodyDesc);
+				component._bodyHandle = body.handle;
+				const collision = entity.collision;
+				if (collision) {
+						let colliderDesc = this._createColliderDesc(collision);
+						if (colliderDesc) {
+								colliderDesc.setFriction(component._friction);
+								colliderDesc.setRestitution(component._restitution);
+								if (component._mass > 0 && component._type === BODYTYPE_DYNAMIC) {
+										colliderDesc.setMass(component._mass);
+								}
+								colliderDesc.setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
+								const collider = this._world.createCollider(colliderDesc, body);
+								component._colliderHandle = collider.handle;
+						}
+				}
+				this._bodyComponentMap.set(body.handle, component);
+				if (component._type === BODYTYPE_DYNAMIC) {
+						this._dynamic.push(component);
+				} else if (component._type === BODYTYPE_KINEMATIC) {
+						this._kinematic.push(component);
+				}
+				component._simulated = true;
+		}
+		_createColliderDesc(collision) {
+				const RAPIER = this._RAPIER;
+				const type = collision.type;
+				const he = collision.halfExtents;
+				switch(type){
+						case 'box':
+								return RAPIER.ColliderDesc.cuboid(he.x, he.y, he.z);
+						case 'sphere':
+								return RAPIER.ColliderDesc.ball(collision.radius);
+						case 'capsule':
+								return RAPIER.ColliderDesc.capsule(collision.height / 2, collision.radius);
+						case 'cylinder':
+								return RAPIER.ColliderDesc.cylinder(collision.height / 2, collision.radius);
+						case 'cone':
+								return RAPIER.ColliderDesc.cone(collision.height / 2, collision.radius);
+						case 'compound':
+								return RAPIER.ColliderDesc.cuboid(he.x, he.y, he.z);
+						default:
+								console.warn(`RapierPhysics: unsupported collision type '${type}', using box`);
+								return RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5);
+				}
+		}
+		_removeBody(component) {
+				if (!this._world || component._bodyHandle < 0) return;
+				const body = this._world.getRigidBody(component._bodyHandle);
+				if (body) {
+						this._world.removeRigidBody(body);
+				}
+				this._bodyComponentMap.delete(component._bodyHandle);
+				this._dynamic = this._dynamic.filter((c)=>c !== component);
+				this._kinematic = this._kinematic.filter((c)=>c !== component);
+				component._bodyHandle = -1;
+				component._colliderHandle = -1;
+				component._simulated = false;
+		}
+		_onUpdate(dt) {
+				if (!this._world) return;
+				this._stats.physicsStart = now();
+				const g = this._world.gravity;
+				if (g.x !== this.gravity.x || g.y !== this.gravity.y || g.z !== this.gravity.z) {
+						this._world.gravity = {
+								x: this.gravity.x,
+								y: this.gravity.y,
+								z: this.gravity.z
+						};
+				}
+				for(let i = 0; i < this._kinematic.length; i++){
+						const comp = this._kinematic[i];
+						const body = comp._getRapierBody();
+						if (!body) continue;
+						const pos = comp.entity.getPosition();
+						const rot = comp.entity.getRotation();
+						body.setNextKinematicTranslation({
+								x: pos.x,
+								y: pos.y,
+								z: pos.z
+						});
+						body.setNextKinematicRotation({
+								x: rot.x,
+								y: rot.y,
+								z: rot.z,
+								w: rot.w
+						});
+				}
+				this._world.timestep = this.fixedTimeStep;
+				this._world.step(this._eventQueue);
+				for(let i = 0; i < this._dynamic.length; i++){
+						const comp = this._dynamic[i];
+						const body = comp._getRapierBody();
+						if (!body) continue;
+						if (!body.isSleeping()) {
+								const t = body.translation();
+								const r = body.rotation();
+								comp.entity.setPosition(t.x, t.y, t.z);
+								comp.entity.setRotation(r.x, r.y, r.z, r.w);
+						}
+				}
+				if (this._eventQueue) {
+						this._eventQueue.drainCollisionEvents((h1, h2, started)=>{
+								this._processCollisionEvent(h1, h2, started);
+						});
+				}
+				this._stats.physicsTime = now() - this._stats.physicsStart;
+		}
+		_processCollisionEvent(h1, h2, started) {
+				const c1 = this._world.getCollider(h1);
+				const c2 = this._world.getCollider(h2);
+				if (!c1 || !c2) return;
+				const b1 = c1.parent();
+				const b2 = c2.parent();
+				if (!b1 || !b2) return;
+				const comp1 = this._bodyComponentMap.get(b1.handle);
+				const comp2 = this._bodyComponentMap.get(b2.handle);
+				if (!comp1 || !comp2) return;
+				const eventName = started ? 'collisionstart' : 'collisionend';
+				const result1 = {
+						other: comp2.entity,
+						contacts: []
+				};
+				const result2 = {
+						other: comp1.entity,
+						contacts: []
+				};
+				comp1.fire(eventName, result1);
+				comp2.fire(eventName, result2);
+		}
+		raycastFirst(start, end) {
+				if (!this._world || !this._RAPIER) return null;
+				const dir = new Vec3().sub2(end, start);
+				const maxDist = dir.length();
+				dir.normalize();
+				const RAPIER = this._RAPIER;
+				const ray = new RAPIER.Ray({
+						x: start.x,
+						y: start.y,
+						z: start.z
+				}, {
+						x: dir.x,
+						y: dir.y,
+						z: dir.z
+				});
+				const hit = this._world.castRay(ray, maxDist, true);
+				if (!hit) return null;
+				const hitPoint = ray.pointAt(hit.timeOfImpact);
+				const collider = this._world.getCollider(hit.colliderHandle);
+				if (!collider) return null;
+				const body = collider.parent();
+				if (!body) return null;
+				const comp = this._bodyComponentMap.get(body.handle);
+				return {
+						entity: comp ? comp.entity : null,
+						point: new Vec3(hitPoint.x, hitPoint.y, hitPoint.z),
+						normal: new Vec3(0, 1, 0),
+						hitFraction: hit.timeOfImpact / maxDist
+				};
+		}
+		_onBeforeRemove(entity, component) {
+				if (component._simulated) {
+						this._removeBody(component);
+				}
+		}
+		destroy() {
+				super.destroy();
+				this.app.systems.off('update', this._onUpdate, this);
+				if (this._eventQueue) {
+						this._eventQueue.free();
+						this._eventQueue = null;
+				}
+				if (this._world) {
+						this._world.free();
+						this._world = null;
+				}
+				this._bodyComponentMap.clear();
+				this._dynamic.length = 0;
+				this._kinematic.length = 0;
+		}
+		constructor(app){
+				super(app), this._RAPIER = null, this._world = null, this._eventQueue = null, this._bodyComponentMap = new Map(), this._dynamic = [], this._kinematic = [], this.maxSubSteps = 10, this.fixedTimeStep = 1 / 60, this.gravity = new Vec3(0, -9.81, 0);
+				this.id = 'rigidbody';
+				this._stats = app.stats.frame;
+				this.ComponentType = RapierRigidBodyComponent;
+				this.DataType = RapierRigidBodyComponentData;
+				this.schema = _schema;
+				this.on('beforeremove', this._onBeforeRemove, this);
 		}
 }
 
@@ -112806,4 +113497,4 @@ class ViewCube extends EventHandler {
 }
 ViewCube.EVENT_CAMERAALIGN = 'camera:align';
 
-export { ABSOLUTE_URL, ACTION_GAMEPAD, ACTION_KEYBOARD, ACTION_MOUSE, ADDRESS_CLAMP_TO_EDGE, ADDRESS_MIRRORED_REPEAT, ADDRESS_REPEAT, AMBIENTSRC_AMBIENTSH, AMBIENTSRC_CONSTANT, AMBIENTSRC_ENVALATLAS, ANIM_BLEND_1D, ANIM_BLEND_2D_CARTESIAN, ANIM_BLEND_2D_DIRECTIONAL, ANIM_BLEND_DIRECT, ANIM_CONTROL_STATES, ANIM_EQUAL_TO, ANIM_GREATER_THAN, ANIM_GREATER_THAN_EQUAL_TO, ANIM_INTERRUPTION_NEXT, ANIM_INTERRUPTION_NEXT_PREV, ANIM_INTERRUPTION_NONE, ANIM_INTERRUPTION_PREV, ANIM_INTERRUPTION_PREV_NEXT, ANIM_LAYER_ADDITIVE, ANIM_LAYER_OVERWRITE, ANIM_LESS_THAN, ANIM_LESS_THAN_EQUAL_TO, ANIM_NOT_EQUAL_TO, ANIM_PARAMETER_BOOLEAN, ANIM_PARAMETER_FLOAT, ANIM_PARAMETER_INTEGER, ANIM_PARAMETER_TRIGGER, ANIM_STATE_ANY, ANIM_STATE_END, ANIM_STATE_START, ASPECT_AUTO, ASPECT_MANUAL, ASSET_ANIMATION, ASSET_AUDIO, ASSET_CONTAINER, ASSET_CSS, ASSET_CUBEMAP, ASSET_HTML, ASSET_IMAGE, ASSET_JSON, ASSET_MATERIAL, ASSET_MODEL, ASSET_SCRIPT, ASSET_SHADER, ASSET_TEXT, ASSET_TEXTURE, ASSET_TEXTUREATLAS, AXIS_KEY, AXIS_MOUSE_X, AXIS_MOUSE_Y, AXIS_PAD_L_X, AXIS_PAD_L_Y, AXIS_PAD_R_X, AXIS_PAD_R_Y, AnimBinder, AnimClip, AnimClipHandler, AnimComponent, AnimComponentLayer, AnimComponentSystem, AnimController, AnimCurve, AnimData, AnimEvaluator, AnimEvents, AnimSnapshot, AnimStateGraph, AnimStateGraphHandler, AnimTarget, AnimTrack, Animation, AnimationComponent, AnimationComponentSystem, AnimationHandler, AnimationKey, AnimationNode, AppBase, AppOptions, Application, Asset, AssetListLoader, AssetReference, AssetRegistry, AudioHandler, AudioListenerComponent, AudioListenerComponentSystem, BAKE_COLOR, BAKE_COLORDIR, BINDGROUP_MESH, BINDGROUP_MESH_UB, BINDGROUP_VIEW, BLENDEQUATION_ADD, BLENDEQUATION_MAX, BLENDEQUATION_MIN, BLENDEQUATION_REVERSE_SUBTRACT, BLENDEQUATION_SUBTRACT, BLENDMODE_CONSTANT, BLENDMODE_CONSTANT_ALPHA, BLENDMODE_CONSTANT_COLOR, BLENDMODE_DST_ALPHA, BLENDMODE_DST_COLOR, BLENDMODE_ONE, BLENDMODE_ONE_MINUS_CONSTANT, BLENDMODE_ONE_MINUS_CONSTANT_ALPHA, BLENDMODE_ONE_MINUS_CONSTANT_COLOR, BLENDMODE_ONE_MINUS_DST_ALPHA, BLENDMODE_ONE_MINUS_DST_COLOR, BLENDMODE_ONE_MINUS_SRC_ALPHA, BLENDMODE_ONE_MINUS_SRC_COLOR, BLENDMODE_SRC_ALPHA, BLENDMODE_SRC_ALPHA_SATURATE, BLENDMODE_SRC_COLOR, BLENDMODE_ZERO, BLEND_ADDITIVE, BLEND_ADDITIVEALPHA, BLEND_MAX, BLEND_MIN, BLEND_MULTIPLICATIVE, BLEND_MULTIPLICATIVE2X, BLEND_NONE, BLEND_NORMAL, BLEND_PREMULTIPLIED, BLEND_SCREEN, BLEND_SUBTRACTIVE, BLUR_BOX, BLUR_GAUSSIAN, BODYFLAG_KINEMATIC_OBJECT, BODYFLAG_NORESPONSE_OBJECT, BODYFLAG_STATIC_OBJECT, BODYGROUP_DEFAULT, BODYGROUP_DYNAMIC, BODYGROUP_ENGINE_1, BODYGROUP_ENGINE_2, BODYGROUP_ENGINE_3, BODYGROUP_KINEMATIC, BODYGROUP_NONE, BODYGROUP_STATIC, BODYGROUP_TRIGGER, BODYGROUP_USER_1, BODYGROUP_USER_2, BODYGROUP_USER_3, BODYGROUP_USER_4, BODYGROUP_USER_5, BODYGROUP_USER_6, BODYGROUP_USER_7, BODYGROUP_USER_8, BODYMASK_ALL, BODYMASK_NONE, BODYMASK_NOT_STATIC, BODYMASK_NOT_STATIC_KINEMATIC, BODYMASK_STATIC, BODYSTATE_ACTIVE_TAG, BODYSTATE_DISABLE_DEACTIVATION, BODYSTATE_DISABLE_SIMULATION, BODYSTATE_ISLAND_SLEEPING, BODYSTATE_WANTS_DEACTIVATION, BODYTYPE_DYNAMIC, BODYTYPE_KINEMATIC, BODYTYPE_STATIC, BUFFERUSAGE_COPY_DST, BUFFERUSAGE_COPY_SRC, BUFFERUSAGE_INDEX, BUFFERUSAGE_INDIRECT, BUFFERUSAGE_READ, BUFFERUSAGE_STORAGE, BUFFERUSAGE_UNIFORM, BUFFERUSAGE_VERTEX, BUFFERUSAGE_WRITE, BUFFER_DYNAMIC, BUFFER_GPUDYNAMIC, BUFFER_STATIC, BUFFER_STREAM, BUTTON_TRANSITION_MODE_SPRITE_CHANGE, BUTTON_TRANSITION_MODE_TINT, Batch, BatchGroup, BatchManager, BinaryHandler, BindGroupFormat, BindStorageBufferFormat, BindStorageTextureFormat, BindTextureFormat, BindUniformBufferFormat, BlendState, BoundingBox, BoundingSphere, BoxGeometry, Bundle, BundleHandler, BundleRegistry, ButtonComponent, ButtonComponentSystem, CHUNKAPI_1_51, CHUNKAPI_1_55, CHUNKAPI_1_56, CHUNKAPI_1_57, CHUNKAPI_1_58, CHUNKAPI_1_60, CHUNKAPI_1_62, CHUNKAPI_1_65, CHUNKAPI_1_70, CHUNKAPI_2_1, CHUNKAPI_2_3, CHUNKAPI_2_5, CHUNKAPI_2_6, CHUNKAPI_2_7, CHUNKAPI_2_8, CLEARFLAG_COLOR, CLEARFLAG_DEPTH, CLEARFLAG_STENCIL, CUBEFACE_NEGX, CUBEFACE_NEGY, CUBEFACE_NEGZ, CUBEFACE_POSX, CUBEFACE_POSY, CUBEFACE_POSZ, CUBEPROJ_BOX, CUBEPROJ_NONE, CULLFACE_BACK, CULLFACE_FRONT, CULLFACE_FRONTANDBACK, CULLFACE_NONE, CURVE_LINEAR, CURVE_SMOOTHSTEP, CURVE_SPLINE, CURVE_STEP, Camera, CameraComponent, CameraComponentSystem, CameraFrame, CameraFrameOptions, CanvasFont, CapsuleGeometry, ChunkUtils, CollisionComponent, CollisionComponentSystem, Color, Component, ComponentSystem, ComponentSystemRegistry, Compute, ComputeRadixSort, ConeGeometry, ContactPoint, ContactResult, ContainerHandler, ContainerResource, Controller, CssHandler, CubemapHandler, Curve, CurveSet, CylinderGeometry, DETAILMODE_ADD, DETAILMODE_MAX, DETAILMODE_MIN, DETAILMODE_MUL, DETAILMODE_OVERLAY, DETAILMODE_SCREEN, DEVICETYPE_NULL, DEVICETYPE_WEBGL2, DEVICETYPE_WEBGPU, DEVICETYPE_WEBGPU_BARE, DISPLAYFORMAT_HDR, DISPLAYFORMAT_LDR, DISPLAYFORMAT_LDR_SRGB, DISTANCE_EXPONENTIAL, DISTANCE_INVERSE, DISTANCE_LINEAR, DITHER_BAYER8, DITHER_BLUENOISE, DITHER_IGNNOISE, DITHER_NONE, DefaultAnimBinder, DepthState, DeterministicSimulation, DomeGeometry, DrawCommands, DualGestureSource, ELEMENTTYPE_GROUP, ELEMENTTYPE_IMAGE, ELEMENTTYPE_TEXT, EMITTERSHAPE_BOX, EMITTERSHAPE_SPHERE, EVENT_CULL_END, EVENT_GAMEPADCONNECTED, EVENT_GAMEPADDISCONNECTED, EVENT_KEYDOWN, EVENT_KEYUP, EVENT_MOUSEDOWN, EVENT_MOUSEMOVE, EVENT_MOUSEUP, EVENT_MOUSEWHEEL, EVENT_POSTCULL, EVENT_POSTRENDER, EVENT_POSTRENDER_LAYER, EVENT_PRECULL, EVENT_PRERENDER, EVENT_PRERENDER_LAYER, EVENT_SELECT, EVENT_SELECTEND, EVENT_SELECTSTART, EVENT_TOUCHCANCEL, EVENT_TOUCHEND, EVENT_TOUCHMOVE, EVENT_TOUCHSTART, ElementComponent, ElementComponentSystem, ElementDragHelper, ElementInput, ElementInputEvent, ElementMouseEvent, ElementSelectEvent, ElementTouchEvent, Entity, EnvLighting, EventHandle, EventHandler, FILLMODE_FILL_WINDOW, FILLMODE_KEEP_ASPECT, FILLMODE_NONE, FILTER_LINEAR, FILTER_LINEAR_MIPMAP_LINEAR, FILTER_LINEAR_MIPMAP_NEAREST, FILTER_NEAREST, FILTER_NEAREST_MIPMAP_LINEAR, FILTER_NEAREST_MIPMAP_NEAREST, FITMODE_CONTAIN, FITMODE_COVER, FITMODE_STRETCH, FITTING_BOTH, FITTING_NONE, FITTING_SHRINK, FITTING_STRETCH, FOG_EXP, FOG_EXP2, FOG_LINEAR, FOG_NONE, FONT_BITMAP, FONT_MSDF, FRESNEL_NONE, FRESNEL_SCHLICK, FRONTFACE_CCW, FRONTFACE_CW, FUNC_ALWAYS, FUNC_EQUAL, FUNC_GREATER, FUNC_GREATEREQUAL, FUNC_LESS, FUNC_LESSEQUAL, FUNC_NEVER, FUNC_NOTEQUAL, FixedTimestepManager, FloatPacking, FlyController, FocusController, FogParams, FolderHandler, Font, FontHandler, ForwardRenderer, FramePass, FramePassBloom, FramePassCameraFrame, FramePassColorGrab, FramePassDof, FramePassRadixSort, Frustum, GAMMA_NONE, GAMMA_SRGB, GIZMOAXIS_FACE, GIZMOAXIS_X, GIZMOAXIS_XY, GIZMOAXIS_XYZ, GIZMOAXIS_XZ, GIZMOAXIS_Y, GIZMOAXIS_YZ, GIZMOAXIS_Z, GIZMOSPACE_LOCAL, GIZMOSPACE_WORLD, GSPLATDATA_COMPACT, GSPLATDATA_LARGE, GSPLAT_FORWARD, GSPLAT_RENDERER_AUTO, GSPLAT_RENDERER_COMPUTE, GSPLAT_RENDERER_RASTER_CPU_SORT, GSPLAT_RENDERER_RASTER_GPU_SORT, GSPLAT_SHADOW, GSPLAT_STREAM_INSTANCE, GSPLAT_STREAM_RESOURCE, GSplatComponent, GSplatComponentSystem, GSplatContainer, GSplatData, GSplatFormat, GSplatHandler, GSplatInstance, GSplatProcessor, GSplatResource, GSplatResourceBase, GSplatSogData, GSplatSogResource, GamePads, GamepadSource, Geometry, Gizmo, GltfExporter, GraphNode, GraphicsDevice, HierarchyHandler, HtmlHandler, Http, I18n, INDEXFORMAT_UINT16, INDEXFORMAT_UINT32, INDEXFORMAT_UINT8, INTERPOLATION_CUBIC, INTERPOLATION_LINEAR, INTERPOLATION_STEP, ImageElement, IndexBuffer, IndexedList, InputConsumer, InputController, InputDelta, InputFrame, InputSource, JointComponent, JointComponentSystem, JsonHandler, JsonStandardMaterialParser, KEY_0, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_A, KEY_ADD, KEY_ALT, KEY_B, KEY_BACKSPACE, KEY_BACK_SLASH, KEY_C, KEY_CAPS_LOCK, KEY_CLOSE_BRACKET, KEY_COMMA, KEY_CONTEXT_MENU, KEY_CONTROL, KEY_D, KEY_DECIMAL, KEY_DELETE, KEY_DIVIDE, KEY_DOWN, KEY_E, KEY_END, KEY_ENTER, KEY_EQUAL, KEY_ESCAPE, KEY_F, KEY_F1, KEY_F10, KEY_F11, KEY_F12, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_G, KEY_H, KEY_HOME, KEY_I, KEY_INSERT, KEY_J, KEY_K, KEY_L, KEY_LEFT, KEY_M, KEY_META, KEY_MULTIPLY, KEY_N, KEY_NUMPAD_0, KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4, KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_O, KEY_OPEN_BRACKET, KEY_P, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_PAUSE, KEY_PERIOD, KEY_PRINT_SCREEN, KEY_Q, KEY_R, KEY_RETURN, KEY_RIGHT, KEY_S, KEY_SEMICOLON, KEY_SEPARATOR, KEY_SHIFT, KEY_SLASH, KEY_SPACE, KEY_SUBTRACT, KEY_T, KEY_TAB, KEY_U, KEY_UP, KEY_V, KEY_W, KEY_WINDOWS, KEY_X, KEY_Y, KEY_Z, Kernel, Key, Keyboard, KeyboardEvent, KeyboardMouseSource, LAYERID_DEPTH, LAYERID_IMMEDIATE, LAYERID_SKYBOX, LAYERID_UI, LAYERID_WORLD, LAYER_GIZMO, LAYER_HUD, LAYER_WORLD, LIGHTFALLOFF_INVERSESQUARED, LIGHTFALLOFF_LINEAR, LIGHTSHAPE_DISK, LIGHTSHAPE_PUNCTUAL, LIGHTSHAPE_RECT, LIGHTSHAPE_SPHERE, LIGHTTYPE_COUNT, LIGHTTYPE_DIRECTIONAL, LIGHTTYPE_OMNI, LIGHTTYPE_POINT, LIGHTTYPE_SPOT, LIGHT_COLOR_DIVIDER, Layer, LayerComposition, LayoutCalculator, LayoutChildComponent, LayoutChildComponentSystem, LayoutGroupComponent, LayoutGroupComponentSystem, Light, LightComponent, LightComponentSystem, LightingParams, Lightmapper, LitMaterial, LitOptions, LitShaderOptions, LocalizedAsset, MASK_AFFECT_DYNAMIC, MASK_AFFECT_LIGHTMAPPED, MASK_BAKE, MOTION_FREE, MOTION_LIMITED, MOTION_LOCKED, MOUSEBUTTON_LEFT, MOUSEBUTTON_MIDDLE, MOUSEBUTTON_NONE, MOUSEBUTTON_RIGHT, Mat3, Mat4, Material, MaterialHandler, Mesh, MeshInstance, MiniStats, Model, ModelComponent, ModelComponentSystem, ModelHandler, Morph, MorphInstance, MorphTarget, Mouse, MouseEvent, MultiTouchSource, Node, NullGraphicsDevice, ORIENTATION_HORIZONTAL, ORIENTATION_VERTICAL, OrbitController, OrientedBox, OutlineRenderer, PAD_1, PAD_2, PAD_3, PAD_4, PAD_DOWN, PAD_FACE_1, PAD_FACE_2, PAD_FACE_3, PAD_FACE_4, PAD_LEFT, PAD_L_SHOULDER_1, PAD_L_SHOULDER_2, PAD_L_STICK_BUTTON, PAD_L_STICK_X, PAD_L_STICK_Y, PAD_RIGHT, PAD_R_SHOULDER_1, PAD_R_SHOULDER_2, PAD_R_STICK_BUTTON, PAD_R_STICK_X, PAD_R_STICK_Y, PAD_SELECT, PAD_START, PAD_UP, PAD_VENDOR, PARTICLEMODE_CPU, PARTICLEMODE_GPU, PARTICLEORIENTATION_EMITTER, PARTICLEORIENTATION_SCREEN, PARTICLEORIENTATION_WORLD, PARTICLESORT_DISTANCE, PARTICLESORT_NEWER_FIRST, PARTICLESORT_NONE, PARTICLESORT_OLDER_FIRST, PIXELFORMAT_111110F, PIXELFORMAT_A8, PIXELFORMAT_ASTC_4x4, PIXELFORMAT_ASTC_4x4_SRGB, PIXELFORMAT_ATC_RGB, PIXELFORMAT_ATC_RGBA, PIXELFORMAT_BC6F, PIXELFORMAT_BC6UF, PIXELFORMAT_BC7, PIXELFORMAT_BC7_SRGBA, PIXELFORMAT_BGRA8, PIXELFORMAT_DEPTH, PIXELFORMAT_DEPTH16, PIXELFORMAT_DEPTHSTENCIL, PIXELFORMAT_DXT1, PIXELFORMAT_DXT1_SRGB, PIXELFORMAT_DXT3, PIXELFORMAT_DXT3_SRGBA, PIXELFORMAT_DXT5, PIXELFORMAT_DXT5_SRGBA, PIXELFORMAT_ETC1, PIXELFORMAT_ETC2_RGB, PIXELFORMAT_ETC2_RGBA, PIXELFORMAT_ETC2_SRGB, PIXELFORMAT_ETC2_SRGBA, PIXELFORMAT_L8, PIXELFORMAT_L8_A8, PIXELFORMAT_LA8, PIXELFORMAT_PVRTC_2BPP_RGBA_1, PIXELFORMAT_PVRTC_2BPP_RGB_1, PIXELFORMAT_PVRTC_4BPP_RGBA_1, PIXELFORMAT_PVRTC_4BPP_RGB_1, PIXELFORMAT_R16F, PIXELFORMAT_R16I, PIXELFORMAT_R16U, PIXELFORMAT_R32F, PIXELFORMAT_R32I, PIXELFORMAT_R32U, PIXELFORMAT_R4_G4_B4_A4, PIXELFORMAT_R5_G5_B5_A1, PIXELFORMAT_R5_G6_B5, PIXELFORMAT_R8, PIXELFORMAT_R8I, PIXELFORMAT_R8U, PIXELFORMAT_R8_G8_B8, PIXELFORMAT_R8_G8_B8_A8, PIXELFORMAT_RG16F, PIXELFORMAT_RG16I, PIXELFORMAT_RG16U, PIXELFORMAT_RG32F, PIXELFORMAT_RG32I, PIXELFORMAT_RG32U, PIXELFORMAT_RG8, PIXELFORMAT_RG8I, PIXELFORMAT_RG8S, PIXELFORMAT_RG8U, PIXELFORMAT_RGB10A2, PIXELFORMAT_RGB10A2U, PIXELFORMAT_RGB16F, PIXELFORMAT_RGB32F, PIXELFORMAT_RGB565, PIXELFORMAT_RGB8, PIXELFORMAT_RGB9E5, PIXELFORMAT_RGBA16F, PIXELFORMAT_RGBA16I, PIXELFORMAT_RGBA16U, PIXELFORMAT_RGBA32F, PIXELFORMAT_RGBA32I, PIXELFORMAT_RGBA32U, PIXELFORMAT_RGBA4, PIXELFORMAT_RGBA5551, PIXELFORMAT_RGBA8, PIXELFORMAT_RGBA8I, PIXELFORMAT_RGBA8S, PIXELFORMAT_RGBA8U, PIXELFORMAT_SBGRA8, PIXELFORMAT_SRGB, PIXELFORMAT_SRGB8, PIXELFORMAT_SRGBA, PIXELFORMAT_SRGBA8, PRIMITIVE_LINELOOP, PRIMITIVE_LINES, PRIMITIVE_LINESTRIP, PRIMITIVE_POINTS, PRIMITIVE_TRIANGLES, PRIMITIVE_TRIFAN, PRIMITIVE_TRISTRIP, PROJECTION_ORTHOGRAPHIC, PROJECTION_PERSPECTIVE, ParticleEmitter, ParticleSystemComponent, ParticleSystemComponentSystem, PhysicsBackend, Picker, Plane, PlaneGeometry, Pose, PostEffect, PostEffectQueue, PreviousTransform, ProgramLibrary, QuadRender, Quat, REFLECTIONSRC_CUBEMAP, REFLECTIONSRC_ENVATLAS, REFLECTIONSRC_ENVATLASHQ, REFLECTIONSRC_NONE, REFLECTIONSRC_SPHEREMAP, RENDERSTYLE_POINTS, RENDERSTYLE_SOLID, RENDERSTYLE_WIREFRAME, RESOLUTION_AUTO, RESOLUTION_FIXED, RIGIDBODY_ACTIVE_TAG, RIGIDBODY_CF_KINEMATIC_OBJECT, RIGIDBODY_CF_NORESPONSE_OBJECT, RIGIDBODY_CF_STATIC_OBJECT, RIGIDBODY_DISABLE_DEACTIVATION, RIGIDBODY_DISABLE_SIMULATION, RIGIDBODY_ISLAND_SLEEPING, RIGIDBODY_TYPE_DYNAMIC, RIGIDBODY_TYPE_KINEMATIC, RIGIDBODY_TYPE_STATIC, RIGIDBODY_WANTS_DEACTIVATION, RapierBackend, Ray, RaycastResult, ReadStream, RenderComponent, RenderComponentSystem, RenderHandler, RenderPass, RenderPassCompose, RenderPassDepthAwareBlur, RenderPassDownsample, RenderPassForward, RenderPassPicker, RenderPassPrepass, RenderPassShaderQuad, RenderPassSsao, RenderPassTAA, RenderPassUpsample, RenderTarget, ResourceHandler, ResourceLoader, RigidBodyComponent, RigidBodyComponentSystem, RotateGizmo, SAMPLETYPE_DEPTH, SAMPLETYPE_FLOAT, SAMPLETYPE_INT, SAMPLETYPE_UINT, SAMPLETYPE_UNFILTERABLE_FLOAT, SCALEMODE_BLEND, SCALEMODE_NONE, SCROLLBAR_VISIBILITY_SHOW_ALWAYS, SCROLLBAR_VISIBILITY_SHOW_WHEN_REQUIRED, SCROLL_MODE_BOUNCE, SCROLL_MODE_CLAMP, SCROLL_MODE_INFINITE, SEMANTIC_ATTR0, SEMANTIC_ATTR1, SEMANTIC_ATTR10, SEMANTIC_ATTR11, SEMANTIC_ATTR12, SEMANTIC_ATTR13, SEMANTIC_ATTR14, SEMANTIC_ATTR15, SEMANTIC_ATTR2, SEMANTIC_ATTR3, SEMANTIC_ATTR4, SEMANTIC_ATTR5, SEMANTIC_ATTR6, SEMANTIC_ATTR7, SEMANTIC_ATTR8, SEMANTIC_ATTR9, SEMANTIC_BLENDINDICES, SEMANTIC_BLENDWEIGHT, SEMANTIC_COLOR, SEMANTIC_NORMAL, SEMANTIC_POSITION, SEMANTIC_TANGENT, SEMANTIC_TEXCOORD, SEMANTIC_TEXCOORD0, SEMANTIC_TEXCOORD1, SEMANTIC_TEXCOORD2, SEMANTIC_TEXCOORD3, SEMANTIC_TEXCOORD4, SEMANTIC_TEXCOORD5, SEMANTIC_TEXCOORD6, SEMANTIC_TEXCOORD7, SHADERDEF_BATCH, SHADERDEF_DIRLM, SHADERDEF_INSTANCING, SHADERDEF_LM, SHADERDEF_LMAMBIENT, SHADERDEF_MORPH_NORMAL, SHADERDEF_MORPH_POSITION, SHADERDEF_MORPH_TEXTURE_BASED_INT, SHADERDEF_NOSHADOW, SHADERDEF_SCREENSPACE, SHADERDEF_SKIN, SHADERDEF_TANGENTS, SHADERDEF_UV0, SHADERDEF_UV1, SHADERDEF_VCOLOR, SHADERLANGUAGE_GLSL, SHADERLANGUAGE_WGSL, SHADERPASS_ALBEDO, SHADERPASS_AO, SHADERPASS_EMISSION, SHADERPASS_FORWARD, SHADERPASS_GLOSS, SHADERPASS_LIGHTING, SHADERPASS_METALNESS, SHADERPASS_OPACITY, SHADERPASS_SPECULARITY, SHADERPASS_UV0, SHADERPASS_WORLDNORMAL, SHADERSTAGE_COMPUTE, SHADERSTAGE_FRAGMENT, SHADERSTAGE_VERTEX, SHADERTAG_MATERIAL, SHADER_DEPTH_PICK, SHADER_FORWARD, SHADER_PICK, SHADER_PREPASS, SHADER_SHADOW, SHADOWCAMERA_NAME, SHADOWUPDATE_NONE, SHADOWUPDATE_REALTIME, SHADOWUPDATE_THISFRAME, SHADOW_CASCADE_0, SHADOW_CASCADE_1, SHADOW_CASCADE_2, SHADOW_CASCADE_3, SHADOW_CASCADE_ALL, SHADOW_PCF1, SHADOW_PCF1_16F, SHADOW_PCF1_32F, SHADOW_PCF3, SHADOW_PCF3_16F, SHADOW_PCF3_32F, SHADOW_PCF5, SHADOW_PCF5_16F, SHADOW_PCF5_32F, SHADOW_PCSS_32F, SHADOW_VSM16, SHADOW_VSM32, SHADOW_VSM_16F, SHADOW_VSM_32F, SKYTYPE_BOX, SKYTYPE_DOME, SKYTYPE_INFINITE, SORTMODE_BACK2FRONT, SORTMODE_CUSTOM, SORTMODE_FRONT2BACK, SORTMODE_MANUAL, SORTMODE_MATERIALMESH, SORTMODE_NONE, SPECOCC_AO, SPECOCC_GLOSSDEPENDENT, SPECOCC_NONE, SPRITETYPE_ANIMATED, SPRITETYPE_SIMPLE, SPRITE_RENDERMODE_SIMPLE, SPRITE_RENDERMODE_SLICED, SPRITE_RENDERMODE_TILED, SSAOTYPE_COMBINE, SSAOTYPE_LIGHTING, SSAOTYPE_NONE, STENCILOP_DECREMENT, STENCILOP_DECREMENTWRAP, STENCILOP_INCREMENT, STENCILOP_INCREMENTWRAP, STENCILOP_INVERT, STENCILOP_KEEP, STENCILOP_REPLACE, STENCILOP_ZERO, ScaleGizmo, Scene, SceneHandler, SceneRegistry, SceneRegistryItem, SceneSettingsHandler, ScopeId, ScopeSpace, ScreenComponent, ScreenComponentSystem, Script, ScriptAttributes, ScriptComponent, ScriptComponentSystem, ScriptHandler, ScriptRegistry, ScriptType, ScrollViewComponent, ScrollViewComponentSystem, ScrollbarComponent, ScrollbarComponentSystem, SeededRandom, Shader, ShaderChunks, ShaderHandler, ShaderMaterial, ShaderPass, ShaderUtils, SingleContactResult, SingleGestureSource, Skeleton, Skin, SkinBatchInstance, SkinInstance, Sky, SortedLoopArray, Sound, SoundComponent, SoundComponentSystem, SoundInstance, SoundInstance3d, SoundManager, SoundSlot, SphereGeometry, Sprite, SpriteAnimationClip, SpriteComponent, SpriteComponentSystem, SpriteHandler, StandardMaterial, StandardMaterialOptions, StencilParameters, StorageBuffer, TEXHINT_ASSET, TEXHINT_LIGHTMAP, TEXHINT_NONE, TEXHINT_SHADOWMAP, TEXPROPERTY_ADDRESS_U, TEXPROPERTY_ADDRESS_V, TEXPROPERTY_ADDRESS_W, TEXPROPERTY_ALL, TEXPROPERTY_ANISOTROPY, TEXPROPERTY_COMPARE_FUNC, TEXPROPERTY_COMPARE_ON_READ, TEXPROPERTY_MAG_FILTER, TEXPROPERTY_MIN_FILTER, TEXTUREDIMENSION_1D, TEXTUREDIMENSION_2D, TEXTUREDIMENSION_2D_ARRAY, TEXTUREDIMENSION_3D, TEXTUREDIMENSION_CUBE, TEXTUREDIMENSION_CUBE_ARRAY, TEXTURELOCK_NONE, TEXTURELOCK_READ, TEXTURELOCK_WRITE, TEXTUREPROJECTION_CUBE, TEXTUREPROJECTION_EQUIRECT, TEXTUREPROJECTION_NONE, TEXTUREPROJECTION_OCTAHEDRAL, TEXTURETYPE_DEFAULT, TEXTURETYPE_RGBE, TEXTURETYPE_RGBM, TEXTURETYPE_RGBP, TEXTURETYPE_SWIZZLEGGGR, TONEMAP_ACES, TONEMAP_ACES2, TONEMAP_FILMIC, TONEMAP_HEJL, TONEMAP_LINEAR, TONEMAP_NEUTRAL, TONEMAP_NONE, TRACEID_ASSETS, TRACEID_BINDGROUPFORMAT_ALLOC, TRACEID_BINDGROUP_ALLOC, TRACEID_COMPUTEPIPELINE_ALLOC, TRACEID_ELEMENT, TRACEID_GPU_TIMINGS, TRACEID_OCTREE_RESOURCES, TRACEID_PIPELINELAYOUT_ALLOC, TRACEID_RENDERPIPELINE_ALLOC, TRACEID_RENDER_ACTION, TRACEID_RENDER_FRAME, TRACEID_RENDER_FRAME_TIME, TRACEID_RENDER_PASS, TRACEID_RENDER_PASS_DETAIL, TRACEID_RENDER_QUEUE, TRACEID_RENDER_TARGET_ALLOC, TRACEID_SHADER_ALLOC, TRACEID_SHADER_COMPILE, TRACEID_TEXTURES, TRACEID_TEXTURE_ALLOC, TRACEID_VRAM_IB, TRACEID_VRAM_SB, TRACEID_VRAM_TEXTURE, TRACEID_VRAM_VB, TYPE_FLOAT16, TYPE_FLOAT32, TYPE_INT16, TYPE_INT32, TYPE_INT8, TYPE_UINT16, TYPE_UINT32, TYPE_UINT8, Tags, Template, TemplateHandler, TextElement, TextHandler, Texture, TextureAtlas, TextureAtlasHandler, TextureHandler, TextureUtils, TextureView, TorusGeometry, Touch, TouchDevice, TouchEvent, Tracing, TransformFeedback, TransformGizmo, TransformInterpolator, TranslateGizmo, Tri, UNIFORMTYPE_BOOL, UNIFORMTYPE_BOOLARRAY, UNIFORMTYPE_BVEC2, UNIFORMTYPE_BVEC2ARRAY, UNIFORMTYPE_BVEC3, UNIFORMTYPE_BVEC3ARRAY, UNIFORMTYPE_BVEC4, UNIFORMTYPE_BVEC4ARRAY, UNIFORMTYPE_FLOAT, UNIFORMTYPE_FLOATARRAY, UNIFORMTYPE_INT, UNIFORMTYPE_INTARRAY, UNIFORMTYPE_ITEXTURE2D, UNIFORMTYPE_ITEXTURE2D_ARRAY, UNIFORMTYPE_ITEXTURE3D, UNIFORMTYPE_ITEXTURECUBE, UNIFORMTYPE_IVEC2, UNIFORMTYPE_IVEC2ARRAY, UNIFORMTYPE_IVEC3, UNIFORMTYPE_IVEC3ARRAY, UNIFORMTYPE_IVEC4, UNIFORMTYPE_IVEC4ARRAY, UNIFORMTYPE_MAT2, UNIFORMTYPE_MAT3, UNIFORMTYPE_MAT4, UNIFORMTYPE_MAT4ARRAY, UNIFORMTYPE_TEXTURE2D, UNIFORMTYPE_TEXTURE2D_ARRAY, UNIFORMTYPE_TEXTURE2D_SHADOW, UNIFORMTYPE_TEXTURE3D, UNIFORMTYPE_TEXTURECUBE, UNIFORMTYPE_TEXTURECUBE_SHADOW, UNIFORMTYPE_UINT, UNIFORMTYPE_UINTARRAY, UNIFORMTYPE_UTEXTURE2D, UNIFORMTYPE_UTEXTURE2D_ARRAY, UNIFORMTYPE_UTEXTURE3D, UNIFORMTYPE_UTEXTURECUBE, UNIFORMTYPE_UVEC2, UNIFORMTYPE_UVEC2ARRAY, UNIFORMTYPE_UVEC3, UNIFORMTYPE_UVEC3ARRAY, UNIFORMTYPE_UVEC4, UNIFORMTYPE_UVEC4ARRAY, UNIFORMTYPE_VEC2, UNIFORMTYPE_VEC2ARRAY, UNIFORMTYPE_VEC3, UNIFORMTYPE_VEC3ARRAY, UNIFORMTYPE_VEC4, UNIFORMTYPE_VEC4ARRAY, UNIFORM_BUFFER_DEFAULT_SLOT_NAME, UNUSED_UNIFORM_NAME, URI, UniformBufferFormat, UniformFormat, UsdzExporter, VIEW_CENTER, VIEW_LEFT, VIEW_RIGHT, Vec2, Vec3, Vec4, VertexBuffer, VertexFormat, VertexIterator, ViewCube, WORKBUFFER_UPDATE_ALWAYS, WORKBUFFER_UPDATE_AUTO, WORKBUFFER_UPDATE_ONCE, WasmModule, WebglGraphicsDevice, WebgpuGraphicsDevice, WorldClusters, XRDEPTHSENSINGFORMAT_F32, XRDEPTHSENSINGFORMAT_L8A8, XRDEPTHSENSINGFORMAT_R16U, XRDEPTHSENSINGUSAGE_CPU, XRDEPTHSENSINGUSAGE_GPU, XREYE_LEFT, XREYE_NONE, XREYE_RIGHT, XRHAND_LEFT, XRHAND_NONE, XRHAND_RIGHT, XRPAD_A, XRPAD_B, XRPAD_SQUEEZE, XRPAD_STICK_BUTTON, XRPAD_STICK_X, XRPAD_STICK_Y, XRPAD_TOUCHPAD_BUTTON, XRPAD_TOUCHPAD_X, XRPAD_TOUCHPAD_Y, XRPAD_TRIGGER, XRSPACE_BOUNDEDFLOOR, XRSPACE_LOCAL, XRSPACE_LOCALFLOOR, XRSPACE_UNBOUNDED, XRSPACE_VIEWER, XRTARGETRAY_GAZE, XRTARGETRAY_POINTER, XRTARGETRAY_SCREEN, XRTRACKABLE_MESH, XRTRACKABLE_PLANE, XRTRACKABLE_POINT, XRTYPE_AR, XRTYPE_INLINE, XRTYPE_VR, XrAnchor, XrAnchors, XrDomOverlay, XrFinger, XrHand, XrHitTest, XrHitTestSource, XrImageTracking, XrInput, XrInputSource, XrJoint, XrLightEstimation, XrManager, XrMeshDetection, XrPlane, XrPlaneDetection, XrTrackedImage, XrView, XrViews, ZoneComponent, ZoneComponentSystem, ambientSrcNames, app, basisInitialize, bindGroupNames, blendNames, calculateNormals, calculateTangents, createBox, createCapsule, createCone, createCylinder, createGraphicsDevice, createMesh, createPlane, createScript, createShader, createShaderFromCode, createSphere, createTorus, createURI, cubemaProjectionNames, ditherNames, dracoDecode, dracoInitialize, drawFullscreenQuad, drawQuadWithShader, extend, fresnelNames, gammaNames, getGlslShaderType, getPixelFormatArrayType, getReservedScriptNames, getTouchTargetCoords, getWgslShaderType, guid, http, indexFormatByteSize, isCompressedPixelFormat, isIntegerPixelFormat, isSrgbPixelFormat, lightFalloffNames, lightShapeNames, lightTypeNames, math, now, path, pixelFormatGammaToLinear, pixelFormatInfo, pixelFormatLinearToGamma, platform, primitiveGlslToWgslTypeMap, reflectionSrcNames, registerScript, reprojectTexture, requiresManualGamma, revision, script, semanticToLocation, shaderChunks, shadowTypeInfo, specularOcclusionNames, spriteRenderModeNames, string, tonemapNames, typedArrayIndexFormats, typedArrayIndexFormatsByteSize, typedArrayToType, typedArrayTypes, typedArrayTypesByteSize, uniformTypeToName, uniformTypeToNameMapWGSL, uniformTypeToNameWGSL, uniformTypeToStorage, version, vertexTypesNames };
+export { ABSOLUTE_URL, ACTION_GAMEPAD, ACTION_KEYBOARD, ACTION_MOUSE, ADDRESS_CLAMP_TO_EDGE, ADDRESS_MIRRORED_REPEAT, ADDRESS_REPEAT, AMBIENTSRC_AMBIENTSH, AMBIENTSRC_CONSTANT, AMBIENTSRC_ENVALATLAS, ANIM_BLEND_1D, ANIM_BLEND_2D_CARTESIAN, ANIM_BLEND_2D_DIRECTIONAL, ANIM_BLEND_DIRECT, ANIM_CONTROL_STATES, ANIM_EQUAL_TO, ANIM_GREATER_THAN, ANIM_GREATER_THAN_EQUAL_TO, ANIM_INTERRUPTION_NEXT, ANIM_INTERRUPTION_NEXT_PREV, ANIM_INTERRUPTION_NONE, ANIM_INTERRUPTION_PREV, ANIM_INTERRUPTION_PREV_NEXT, ANIM_LAYER_ADDITIVE, ANIM_LAYER_OVERWRITE, ANIM_LESS_THAN, ANIM_LESS_THAN_EQUAL_TO, ANIM_NOT_EQUAL_TO, ANIM_PARAMETER_BOOLEAN, ANIM_PARAMETER_FLOAT, ANIM_PARAMETER_INTEGER, ANIM_PARAMETER_TRIGGER, ANIM_STATE_ANY, ANIM_STATE_END, ANIM_STATE_START, ASPECT_AUTO, ASPECT_MANUAL, ASSET_ANIMATION, ASSET_AUDIO, ASSET_CONTAINER, ASSET_CSS, ASSET_CUBEMAP, ASSET_HTML, ASSET_IMAGE, ASSET_JSON, ASSET_MATERIAL, ASSET_MODEL, ASSET_SCRIPT, ASSET_SHADER, ASSET_TEXT, ASSET_TEXTURE, ASSET_TEXTUREATLAS, AXIS_KEY, AXIS_MOUSE_X, AXIS_MOUSE_Y, AXIS_PAD_L_X, AXIS_PAD_L_Y, AXIS_PAD_R_X, AXIS_PAD_R_Y, AnimBinder, AnimClip, AnimClipHandler, AnimComponent, AnimComponentLayer, AnimComponentSystem, AnimController, AnimCurve, AnimData, AnimEvaluator, AnimEvents, AnimSnapshot, AnimStateGraph, AnimStateGraphHandler, AnimTarget, AnimTrack, Animation, AnimationComponent, AnimationComponentSystem, AnimationHandler, AnimationKey, AnimationNode, AppBase, AppOptions, Application, Asset, AssetListLoader, AssetReference, AssetRegistry, AudioHandler, AudioListenerComponent, AudioListenerComponentSystem, BAKE_COLOR, BAKE_COLORDIR, BINDGROUP_MESH, BINDGROUP_MESH_UB, BINDGROUP_VIEW, BLENDEQUATION_ADD, BLENDEQUATION_MAX, BLENDEQUATION_MIN, BLENDEQUATION_REVERSE_SUBTRACT, BLENDEQUATION_SUBTRACT, BLENDMODE_CONSTANT, BLENDMODE_CONSTANT_ALPHA, BLENDMODE_CONSTANT_COLOR, BLENDMODE_DST_ALPHA, BLENDMODE_DST_COLOR, BLENDMODE_ONE, BLENDMODE_ONE_MINUS_CONSTANT, BLENDMODE_ONE_MINUS_CONSTANT_ALPHA, BLENDMODE_ONE_MINUS_CONSTANT_COLOR, BLENDMODE_ONE_MINUS_DST_ALPHA, BLENDMODE_ONE_MINUS_DST_COLOR, BLENDMODE_ONE_MINUS_SRC_ALPHA, BLENDMODE_ONE_MINUS_SRC_COLOR, BLENDMODE_SRC_ALPHA, BLENDMODE_SRC_ALPHA_SATURATE, BLENDMODE_SRC_COLOR, BLENDMODE_ZERO, BLEND_ADDITIVE, BLEND_ADDITIVEALPHA, BLEND_MAX, BLEND_MIN, BLEND_MULTIPLICATIVE, BLEND_MULTIPLICATIVE2X, BLEND_NONE, BLEND_NORMAL, BLEND_PREMULTIPLIED, BLEND_SCREEN, BLEND_SUBTRACTIVE, BLUR_BOX, BLUR_GAUSSIAN, BODYFLAG_KINEMATIC_OBJECT, BODYFLAG_NORESPONSE_OBJECT, BODYFLAG_STATIC_OBJECT, BODYGROUP_DEFAULT, BODYGROUP_DYNAMIC, BODYGROUP_ENGINE_1, BODYGROUP_ENGINE_2, BODYGROUP_ENGINE_3, BODYGROUP_KINEMATIC, BODYGROUP_NONE, BODYGROUP_STATIC, BODYGROUP_TRIGGER, BODYGROUP_USER_1, BODYGROUP_USER_2, BODYGROUP_USER_3, BODYGROUP_USER_4, BODYGROUP_USER_5, BODYGROUP_USER_6, BODYGROUP_USER_7, BODYGROUP_USER_8, BODYMASK_ALL, BODYMASK_NONE, BODYMASK_NOT_STATIC, BODYMASK_NOT_STATIC_KINEMATIC, BODYMASK_STATIC, BODYSTATE_ACTIVE_TAG, BODYSTATE_DISABLE_DEACTIVATION, BODYSTATE_DISABLE_SIMULATION, BODYSTATE_ISLAND_SLEEPING, BODYSTATE_WANTS_DEACTIVATION, BODYTYPE_DYNAMIC, BODYTYPE_KINEMATIC, BODYTYPE_STATIC, BUFFERUSAGE_COPY_DST, BUFFERUSAGE_COPY_SRC, BUFFERUSAGE_INDEX, BUFFERUSAGE_INDIRECT, BUFFERUSAGE_READ, BUFFERUSAGE_STORAGE, BUFFERUSAGE_UNIFORM, BUFFERUSAGE_VERTEX, BUFFERUSAGE_WRITE, BUFFER_DYNAMIC, BUFFER_GPUDYNAMIC, BUFFER_STATIC, BUFFER_STREAM, BUTTON_TRANSITION_MODE_SPRITE_CHANGE, BUTTON_TRANSITION_MODE_TINT, Batch, BatchGroup, BatchManager, BinaryHandler, BindGroupFormat, BindStorageBufferFormat, BindStorageTextureFormat, BindTextureFormat, BindUniformBufferFormat, BlendState, BoundingBox, BoundingSphere, BoxGeometry, Bundle, BundleHandler, BundleRegistry, ButtonComponent, ButtonComponentSystem, CHUNKAPI_1_51, CHUNKAPI_1_55, CHUNKAPI_1_56, CHUNKAPI_1_57, CHUNKAPI_1_58, CHUNKAPI_1_60, CHUNKAPI_1_62, CHUNKAPI_1_65, CHUNKAPI_1_70, CHUNKAPI_2_1, CHUNKAPI_2_3, CHUNKAPI_2_5, CHUNKAPI_2_6, CHUNKAPI_2_7, CHUNKAPI_2_8, CLEARFLAG_COLOR, CLEARFLAG_DEPTH, CLEARFLAG_STENCIL, CUBEFACE_NEGX, CUBEFACE_NEGY, CUBEFACE_NEGZ, CUBEFACE_POSX, CUBEFACE_POSY, CUBEFACE_POSZ, CUBEPROJ_BOX, CUBEPROJ_NONE, CULLFACE_BACK, CULLFACE_FRONT, CULLFACE_FRONTANDBACK, CULLFACE_NONE, CURVE_LINEAR, CURVE_SMOOTHSTEP, CURVE_SPLINE, CURVE_STEP, Camera, CameraComponent, CameraComponentSystem, CameraFrame, CameraFrameOptions, CanvasFont, CapsuleGeometry, ChunkUtils, CollisionComponent, CollisionComponentSystem, Color, Component, ComponentSystem, ComponentSystemRegistry, Compute, ComputeRadixSort, ConeGeometry, ContactPoint, ContactResult, ContainerHandler, ContainerResource, Controller, CssHandler, CubemapHandler, Curve, CurveSet, CylinderGeometry, DETAILMODE_ADD, DETAILMODE_MAX, DETAILMODE_MIN, DETAILMODE_MUL, DETAILMODE_OVERLAY, DETAILMODE_SCREEN, DEVICETYPE_NULL, DEVICETYPE_WEBGL2, DEVICETYPE_WEBGPU, DEVICETYPE_WEBGPU_BARE, DISPLAYFORMAT_HDR, DISPLAYFORMAT_LDR, DISPLAYFORMAT_LDR_SRGB, DISTANCE_EXPONENTIAL, DISTANCE_INVERSE, DISTANCE_LINEAR, DITHER_BAYER8, DITHER_BLUENOISE, DITHER_IGNNOISE, DITHER_NONE, DefaultAnimBinder, DepthState, DeterministicSimulation, DomeGeometry, DrawCommands, DualGestureSource, ELEMENTTYPE_GROUP, ELEMENTTYPE_IMAGE, ELEMENTTYPE_TEXT, EMITTERSHAPE_BOX, EMITTERSHAPE_SPHERE, EVENT_CULL_END, EVENT_GAMEPADCONNECTED, EVENT_GAMEPADDISCONNECTED, EVENT_KEYDOWN, EVENT_KEYUP, EVENT_MOUSEDOWN, EVENT_MOUSEMOVE, EVENT_MOUSEUP, EVENT_MOUSEWHEEL, EVENT_POSTCULL, EVENT_POSTRENDER, EVENT_POSTRENDER_LAYER, EVENT_PRECULL, EVENT_PRERENDER, EVENT_PRERENDER_LAYER, EVENT_SELECT, EVENT_SELECTEND, EVENT_SELECTSTART, EVENT_TOUCHCANCEL, EVENT_TOUCHEND, EVENT_TOUCHMOVE, EVENT_TOUCHSTART, ElementComponent, ElementComponentSystem, ElementDragHelper, ElementInput, ElementInputEvent, ElementMouseEvent, ElementSelectEvent, ElementTouchEvent, Entity, EnvLighting, EventHandle, EventHandler, FILLMODE_FILL_WINDOW, FILLMODE_KEEP_ASPECT, FILLMODE_NONE, FILTER_LINEAR, FILTER_LINEAR_MIPMAP_LINEAR, FILTER_LINEAR_MIPMAP_NEAREST, FILTER_NEAREST, FILTER_NEAREST_MIPMAP_LINEAR, FILTER_NEAREST_MIPMAP_NEAREST, FITMODE_CONTAIN, FITMODE_COVER, FITMODE_STRETCH, FITTING_BOTH, FITTING_NONE, FITTING_SHRINK, FITTING_STRETCH, FOG_EXP, FOG_EXP2, FOG_LINEAR, FOG_NONE, FONT_BITMAP, FONT_MSDF, FRESNEL_NONE, FRESNEL_SCHLICK, FRONTFACE_CCW, FRONTFACE_CW, FUNC_ALWAYS, FUNC_EQUAL, FUNC_GREATER, FUNC_GREATEREQUAL, FUNC_LESS, FUNC_LESSEQUAL, FUNC_NEVER, FUNC_NOTEQUAL, FixedTimestepManager, FloatPacking, FlyController, FocusController, FogParams, FolderHandler, Font, FontHandler, ForwardRenderer, FramePass, FramePassBloom, FramePassCameraFrame, FramePassColorGrab, FramePassDof, FramePassRadixSort, Frustum, GAMMA_NONE, GAMMA_SRGB, GIZMOAXIS_FACE, GIZMOAXIS_X, GIZMOAXIS_XY, GIZMOAXIS_XYZ, GIZMOAXIS_XZ, GIZMOAXIS_Y, GIZMOAXIS_YZ, GIZMOAXIS_Z, GIZMOSPACE_LOCAL, GIZMOSPACE_WORLD, GSPLATDATA_COMPACT, GSPLATDATA_LARGE, GSPLAT_FORWARD, GSPLAT_RENDERER_AUTO, GSPLAT_RENDERER_COMPUTE, GSPLAT_RENDERER_RASTER_CPU_SORT, GSPLAT_RENDERER_RASTER_GPU_SORT, GSPLAT_SHADOW, GSPLAT_STREAM_INSTANCE, GSPLAT_STREAM_RESOURCE, GSplatComponent, GSplatComponentSystem, GSplatContainer, GSplatData, GSplatFormat, GSplatHandler, GSplatInstance, GSplatProcessor, GSplatResource, GSplatResourceBase, GSplatSogData, GSplatSogResource, GamePads, GamepadSource, Geometry, Gizmo, GltfExporter, GraphNode, GraphicsDevice, HierarchyHandler, HtmlHandler, Http, I18n, INDEXFORMAT_UINT16, INDEXFORMAT_UINT32, INDEXFORMAT_UINT8, INTERPOLATION_CUBIC, INTERPOLATION_LINEAR, INTERPOLATION_STEP, ImageElement, IndexBuffer, IndexedList, InputConsumer, InputController, InputDelta, InputFrame, InputSource, JointComponent, JointComponentSystem, JsonHandler, JsonStandardMaterialParser, KEY_0, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_A, KEY_ADD, KEY_ALT, KEY_B, KEY_BACKSPACE, KEY_BACK_SLASH, KEY_C, KEY_CAPS_LOCK, KEY_CLOSE_BRACKET, KEY_COMMA, KEY_CONTEXT_MENU, KEY_CONTROL, KEY_D, KEY_DECIMAL, KEY_DELETE, KEY_DIVIDE, KEY_DOWN, KEY_E, KEY_END, KEY_ENTER, KEY_EQUAL, KEY_ESCAPE, KEY_F, KEY_F1, KEY_F10, KEY_F11, KEY_F12, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_G, KEY_H, KEY_HOME, KEY_I, KEY_INSERT, KEY_J, KEY_K, KEY_L, KEY_LEFT, KEY_M, KEY_META, KEY_MULTIPLY, KEY_N, KEY_NUMPAD_0, KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4, KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_O, KEY_OPEN_BRACKET, KEY_P, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_PAUSE, KEY_PERIOD, KEY_PRINT_SCREEN, KEY_Q, KEY_R, KEY_RETURN, KEY_RIGHT, KEY_S, KEY_SEMICOLON, KEY_SEPARATOR, KEY_SHIFT, KEY_SLASH, KEY_SPACE, KEY_SUBTRACT, KEY_T, KEY_TAB, KEY_U, KEY_UP, KEY_V, KEY_W, KEY_WINDOWS, KEY_X, KEY_Y, KEY_Z, Kernel, Key, Keyboard, KeyboardEvent, KeyboardMouseSource, LAYERID_DEPTH, LAYERID_IMMEDIATE, LAYERID_SKYBOX, LAYERID_UI, LAYERID_WORLD, LAYER_GIZMO, LAYER_HUD, LAYER_WORLD, LIGHTFALLOFF_INVERSESQUARED, LIGHTFALLOFF_LINEAR, LIGHTSHAPE_DISK, LIGHTSHAPE_PUNCTUAL, LIGHTSHAPE_RECT, LIGHTSHAPE_SPHERE, LIGHTTYPE_COUNT, LIGHTTYPE_DIRECTIONAL, LIGHTTYPE_OMNI, LIGHTTYPE_POINT, LIGHTTYPE_SPOT, LIGHT_COLOR_DIVIDER, Layer, LayerComposition, LayoutCalculator, LayoutChildComponent, LayoutChildComponentSystem, LayoutGroupComponent, LayoutGroupComponentSystem, Light, LightComponent, LightComponentSystem, LightingParams, Lightmapper, LitMaterial, LitOptions, LitShaderOptions, LocalizedAsset, MASK_AFFECT_DYNAMIC, MASK_AFFECT_LIGHTMAPPED, MASK_BAKE, MOTION_FREE, MOTION_LIMITED, MOTION_LOCKED, MOUSEBUTTON_LEFT, MOUSEBUTTON_MIDDLE, MOUSEBUTTON_NONE, MOUSEBUTTON_RIGHT, Mat3, Mat4, Material, MaterialHandler, Mesh, MeshInstance, MiniStats, Model, ModelComponent, ModelComponentSystem, ModelHandler, Morph, MorphInstance, MorphTarget, Mouse, MouseEvent, MultiTouchSource, Node, NullGraphicsDevice, ORIENTATION_HORIZONTAL, ORIENTATION_VERTICAL, OrbitController, OrientedBox, OutlineRenderer, PAD_1, PAD_2, PAD_3, PAD_4, PAD_DOWN, PAD_FACE_1, PAD_FACE_2, PAD_FACE_3, PAD_FACE_4, PAD_LEFT, PAD_L_SHOULDER_1, PAD_L_SHOULDER_2, PAD_L_STICK_BUTTON, PAD_L_STICK_X, PAD_L_STICK_Y, PAD_RIGHT, PAD_R_SHOULDER_1, PAD_R_SHOULDER_2, PAD_R_STICK_BUTTON, PAD_R_STICK_X, PAD_R_STICK_Y, PAD_SELECT, PAD_START, PAD_UP, PAD_VENDOR, PARTICLEMODE_CPU, PARTICLEMODE_GPU, PARTICLEORIENTATION_EMITTER, PARTICLEORIENTATION_SCREEN, PARTICLEORIENTATION_WORLD, PARTICLESORT_DISTANCE, PARTICLESORT_NEWER_FIRST, PARTICLESORT_NONE, PARTICLESORT_OLDER_FIRST, PIXELFORMAT_111110F, PIXELFORMAT_A8, PIXELFORMAT_ASTC_4x4, PIXELFORMAT_ASTC_4x4_SRGB, PIXELFORMAT_ATC_RGB, PIXELFORMAT_ATC_RGBA, PIXELFORMAT_BC6F, PIXELFORMAT_BC6UF, PIXELFORMAT_BC7, PIXELFORMAT_BC7_SRGBA, PIXELFORMAT_BGRA8, PIXELFORMAT_DEPTH, PIXELFORMAT_DEPTH16, PIXELFORMAT_DEPTHSTENCIL, PIXELFORMAT_DXT1, PIXELFORMAT_DXT1_SRGB, PIXELFORMAT_DXT3, PIXELFORMAT_DXT3_SRGBA, PIXELFORMAT_DXT5, PIXELFORMAT_DXT5_SRGBA, PIXELFORMAT_ETC1, PIXELFORMAT_ETC2_RGB, PIXELFORMAT_ETC2_RGBA, PIXELFORMAT_ETC2_SRGB, PIXELFORMAT_ETC2_SRGBA, PIXELFORMAT_L8, PIXELFORMAT_L8_A8, PIXELFORMAT_LA8, PIXELFORMAT_PVRTC_2BPP_RGBA_1, PIXELFORMAT_PVRTC_2BPP_RGB_1, PIXELFORMAT_PVRTC_4BPP_RGBA_1, PIXELFORMAT_PVRTC_4BPP_RGB_1, PIXELFORMAT_R16F, PIXELFORMAT_R16I, PIXELFORMAT_R16U, PIXELFORMAT_R32F, PIXELFORMAT_R32I, PIXELFORMAT_R32U, PIXELFORMAT_R4_G4_B4_A4, PIXELFORMAT_R5_G5_B5_A1, PIXELFORMAT_R5_G6_B5, PIXELFORMAT_R8, PIXELFORMAT_R8I, PIXELFORMAT_R8U, PIXELFORMAT_R8_G8_B8, PIXELFORMAT_R8_G8_B8_A8, PIXELFORMAT_RG16F, PIXELFORMAT_RG16I, PIXELFORMAT_RG16U, PIXELFORMAT_RG32F, PIXELFORMAT_RG32I, PIXELFORMAT_RG32U, PIXELFORMAT_RG8, PIXELFORMAT_RG8I, PIXELFORMAT_RG8S, PIXELFORMAT_RG8U, PIXELFORMAT_RGB10A2, PIXELFORMAT_RGB10A2U, PIXELFORMAT_RGB16F, PIXELFORMAT_RGB32F, PIXELFORMAT_RGB565, PIXELFORMAT_RGB8, PIXELFORMAT_RGB9E5, PIXELFORMAT_RGBA16F, PIXELFORMAT_RGBA16I, PIXELFORMAT_RGBA16U, PIXELFORMAT_RGBA32F, PIXELFORMAT_RGBA32I, PIXELFORMAT_RGBA32U, PIXELFORMAT_RGBA4, PIXELFORMAT_RGBA5551, PIXELFORMAT_RGBA8, PIXELFORMAT_RGBA8I, PIXELFORMAT_RGBA8S, PIXELFORMAT_RGBA8U, PIXELFORMAT_SBGRA8, PIXELFORMAT_SRGB, PIXELFORMAT_SRGB8, PIXELFORMAT_SRGBA, PIXELFORMAT_SRGBA8, PRIMITIVE_LINELOOP, PRIMITIVE_LINES, PRIMITIVE_LINESTRIP, PRIMITIVE_POINTS, PRIMITIVE_TRIANGLES, PRIMITIVE_TRIFAN, PRIMITIVE_TRISTRIP, PROJECTION_ORTHOGRAPHIC, PROJECTION_PERSPECTIVE, ParticleEmitter, ParticleSystemComponent, ParticleSystemComponentSystem, PhysicsBackend, Picker, Plane, PlaneGeometry, Pose, PostEffect, PostEffectQueue, PreviousTransform, ProgramLibrary, QuadRender, Quat, REFLECTIONSRC_CUBEMAP, REFLECTIONSRC_ENVATLAS, REFLECTIONSRC_ENVATLASHQ, REFLECTIONSRC_NONE, REFLECTIONSRC_SPHEREMAP, RENDERSTYLE_POINTS, RENDERSTYLE_SOLID, RENDERSTYLE_WIREFRAME, RESOLUTION_AUTO, RESOLUTION_FIXED, RIGIDBODY_ACTIVE_TAG, RIGIDBODY_CF_KINEMATIC_OBJECT, RIGIDBODY_CF_NORESPONSE_OBJECT, RIGIDBODY_CF_STATIC_OBJECT, RIGIDBODY_DISABLE_DEACTIVATION, RIGIDBODY_DISABLE_SIMULATION, RIGIDBODY_ISLAND_SLEEPING, RIGIDBODY_TYPE_DYNAMIC, RIGIDBODY_TYPE_KINEMATIC, RIGIDBODY_TYPE_STATIC, RIGIDBODY_WANTS_DEACTIVATION, RapierBackend, RapierCollisionComponent, RapierCollisionComponentSystem, RapierRigidBodyComponent, RapierRigidBodyComponentSystem, Ray, RaycastResult, ReadStream, RenderComponent, RenderComponentSystem, RenderHandler, RenderPass, RenderPassCompose, RenderPassDepthAwareBlur, RenderPassDownsample, RenderPassForward, RenderPassPicker, RenderPassPrepass, RenderPassShaderQuad, RenderPassSsao, RenderPassTAA, RenderPassUpsample, RenderTarget, ResourceHandler, ResourceLoader, RigidBodyComponent, RigidBodyComponentSystem, RotateGizmo, SAMPLETYPE_DEPTH, SAMPLETYPE_FLOAT, SAMPLETYPE_INT, SAMPLETYPE_UINT, SAMPLETYPE_UNFILTERABLE_FLOAT, SCALEMODE_BLEND, SCALEMODE_NONE, SCROLLBAR_VISIBILITY_SHOW_ALWAYS, SCROLLBAR_VISIBILITY_SHOW_WHEN_REQUIRED, SCROLL_MODE_BOUNCE, SCROLL_MODE_CLAMP, SCROLL_MODE_INFINITE, SEMANTIC_ATTR0, SEMANTIC_ATTR1, SEMANTIC_ATTR10, SEMANTIC_ATTR11, SEMANTIC_ATTR12, SEMANTIC_ATTR13, SEMANTIC_ATTR14, SEMANTIC_ATTR15, SEMANTIC_ATTR2, SEMANTIC_ATTR3, SEMANTIC_ATTR4, SEMANTIC_ATTR5, SEMANTIC_ATTR6, SEMANTIC_ATTR7, SEMANTIC_ATTR8, SEMANTIC_ATTR9, SEMANTIC_BLENDINDICES, SEMANTIC_BLENDWEIGHT, SEMANTIC_COLOR, SEMANTIC_NORMAL, SEMANTIC_POSITION, SEMANTIC_TANGENT, SEMANTIC_TEXCOORD, SEMANTIC_TEXCOORD0, SEMANTIC_TEXCOORD1, SEMANTIC_TEXCOORD2, SEMANTIC_TEXCOORD3, SEMANTIC_TEXCOORD4, SEMANTIC_TEXCOORD5, SEMANTIC_TEXCOORD6, SEMANTIC_TEXCOORD7, SHADERDEF_BATCH, SHADERDEF_DIRLM, SHADERDEF_INSTANCING, SHADERDEF_LM, SHADERDEF_LMAMBIENT, SHADERDEF_MORPH_NORMAL, SHADERDEF_MORPH_POSITION, SHADERDEF_MORPH_TEXTURE_BASED_INT, SHADERDEF_NOSHADOW, SHADERDEF_SCREENSPACE, SHADERDEF_SKIN, SHADERDEF_TANGENTS, SHADERDEF_UV0, SHADERDEF_UV1, SHADERDEF_VCOLOR, SHADERLANGUAGE_GLSL, SHADERLANGUAGE_WGSL, SHADERPASS_ALBEDO, SHADERPASS_AO, SHADERPASS_EMISSION, SHADERPASS_FORWARD, SHADERPASS_GLOSS, SHADERPASS_LIGHTING, SHADERPASS_METALNESS, SHADERPASS_OPACITY, SHADERPASS_SPECULARITY, SHADERPASS_UV0, SHADERPASS_WORLDNORMAL, SHADERSTAGE_COMPUTE, SHADERSTAGE_FRAGMENT, SHADERSTAGE_VERTEX, SHADERTAG_MATERIAL, SHADER_DEPTH_PICK, SHADER_FORWARD, SHADER_PICK, SHADER_PREPASS, SHADER_SHADOW, SHADOWCAMERA_NAME, SHADOWUPDATE_NONE, SHADOWUPDATE_REALTIME, SHADOWUPDATE_THISFRAME, SHADOW_CASCADE_0, SHADOW_CASCADE_1, SHADOW_CASCADE_2, SHADOW_CASCADE_3, SHADOW_CASCADE_ALL, SHADOW_PCF1, SHADOW_PCF1_16F, SHADOW_PCF1_32F, SHADOW_PCF3, SHADOW_PCF3_16F, SHADOW_PCF3_32F, SHADOW_PCF5, SHADOW_PCF5_16F, SHADOW_PCF5_32F, SHADOW_PCSS_32F, SHADOW_VSM16, SHADOW_VSM32, SHADOW_VSM_16F, SHADOW_VSM_32F, SKYTYPE_BOX, SKYTYPE_DOME, SKYTYPE_INFINITE, SORTMODE_BACK2FRONT, SORTMODE_CUSTOM, SORTMODE_FRONT2BACK, SORTMODE_MANUAL, SORTMODE_MATERIALMESH, SORTMODE_NONE, SPECOCC_AO, SPECOCC_GLOSSDEPENDENT, SPECOCC_NONE, SPRITETYPE_ANIMATED, SPRITETYPE_SIMPLE, SPRITE_RENDERMODE_SIMPLE, SPRITE_RENDERMODE_SLICED, SPRITE_RENDERMODE_TILED, SSAOTYPE_COMBINE, SSAOTYPE_LIGHTING, SSAOTYPE_NONE, STENCILOP_DECREMENT, STENCILOP_DECREMENTWRAP, STENCILOP_INCREMENT, STENCILOP_INCREMENTWRAP, STENCILOP_INVERT, STENCILOP_KEEP, STENCILOP_REPLACE, STENCILOP_ZERO, ScaleGizmo, Scene, SceneHandler, SceneRegistry, SceneRegistryItem, SceneSettingsHandler, ScopeId, ScopeSpace, ScreenComponent, ScreenComponentSystem, Script, ScriptAttributes, ScriptComponent, ScriptComponentSystem, ScriptHandler, ScriptRegistry, ScriptType, ScrollViewComponent, ScrollViewComponentSystem, ScrollbarComponent, ScrollbarComponentSystem, SeededRandom, Shader, ShaderChunks, ShaderHandler, ShaderMaterial, ShaderPass, ShaderUtils, SingleContactResult, SingleGestureSource, Skeleton, Skin, SkinBatchInstance, SkinInstance, Sky, SortedLoopArray, Sound, SoundComponent, SoundComponentSystem, SoundInstance, SoundInstance3d, SoundManager, SoundSlot, SphereGeometry, Sprite, SpriteAnimationClip, SpriteComponent, SpriteComponentSystem, SpriteHandler, StandardMaterial, StandardMaterialOptions, StencilParameters, StorageBuffer, TEXHINT_ASSET, TEXHINT_LIGHTMAP, TEXHINT_NONE, TEXHINT_SHADOWMAP, TEXPROPERTY_ADDRESS_U, TEXPROPERTY_ADDRESS_V, TEXPROPERTY_ADDRESS_W, TEXPROPERTY_ALL, TEXPROPERTY_ANISOTROPY, TEXPROPERTY_COMPARE_FUNC, TEXPROPERTY_COMPARE_ON_READ, TEXPROPERTY_MAG_FILTER, TEXPROPERTY_MIN_FILTER, TEXTUREDIMENSION_1D, TEXTUREDIMENSION_2D, TEXTUREDIMENSION_2D_ARRAY, TEXTUREDIMENSION_3D, TEXTUREDIMENSION_CUBE, TEXTUREDIMENSION_CUBE_ARRAY, TEXTURELOCK_NONE, TEXTURELOCK_READ, TEXTURELOCK_WRITE, TEXTUREPROJECTION_CUBE, TEXTUREPROJECTION_EQUIRECT, TEXTUREPROJECTION_NONE, TEXTUREPROJECTION_OCTAHEDRAL, TEXTURETYPE_DEFAULT, TEXTURETYPE_RGBE, TEXTURETYPE_RGBM, TEXTURETYPE_RGBP, TEXTURETYPE_SWIZZLEGGGR, TONEMAP_ACES, TONEMAP_ACES2, TONEMAP_FILMIC, TONEMAP_HEJL, TONEMAP_LINEAR, TONEMAP_NEUTRAL, TONEMAP_NONE, TRACEID_ASSETS, TRACEID_BINDGROUPFORMAT_ALLOC, TRACEID_BINDGROUP_ALLOC, TRACEID_COMPUTEPIPELINE_ALLOC, TRACEID_ELEMENT, TRACEID_GPU_TIMINGS, TRACEID_OCTREE_RESOURCES, TRACEID_PIPELINELAYOUT_ALLOC, TRACEID_RENDERPIPELINE_ALLOC, TRACEID_RENDER_ACTION, TRACEID_RENDER_FRAME, TRACEID_RENDER_FRAME_TIME, TRACEID_RENDER_PASS, TRACEID_RENDER_PASS_DETAIL, TRACEID_RENDER_QUEUE, TRACEID_RENDER_TARGET_ALLOC, TRACEID_SHADER_ALLOC, TRACEID_SHADER_COMPILE, TRACEID_TEXTURES, TRACEID_TEXTURE_ALLOC, TRACEID_VRAM_IB, TRACEID_VRAM_SB, TRACEID_VRAM_TEXTURE, TRACEID_VRAM_VB, TYPE_FLOAT16, TYPE_FLOAT32, TYPE_INT16, TYPE_INT32, TYPE_INT8, TYPE_UINT16, TYPE_UINT32, TYPE_UINT8, Tags, Template, TemplateHandler, TextElement, TextHandler, Texture, TextureAtlas, TextureAtlasHandler, TextureHandler, TextureUtils, TextureView, TorusGeometry, Touch, TouchDevice, TouchEvent, Tracing, TransformFeedback, TransformGizmo, TransformInterpolator, TranslateGizmo, Tri, UNIFORMTYPE_BOOL, UNIFORMTYPE_BOOLARRAY, UNIFORMTYPE_BVEC2, UNIFORMTYPE_BVEC2ARRAY, UNIFORMTYPE_BVEC3, UNIFORMTYPE_BVEC3ARRAY, UNIFORMTYPE_BVEC4, UNIFORMTYPE_BVEC4ARRAY, UNIFORMTYPE_FLOAT, UNIFORMTYPE_FLOATARRAY, UNIFORMTYPE_INT, UNIFORMTYPE_INTARRAY, UNIFORMTYPE_ITEXTURE2D, UNIFORMTYPE_ITEXTURE2D_ARRAY, UNIFORMTYPE_ITEXTURE3D, UNIFORMTYPE_ITEXTURECUBE, UNIFORMTYPE_IVEC2, UNIFORMTYPE_IVEC2ARRAY, UNIFORMTYPE_IVEC3, UNIFORMTYPE_IVEC3ARRAY, UNIFORMTYPE_IVEC4, UNIFORMTYPE_IVEC4ARRAY, UNIFORMTYPE_MAT2, UNIFORMTYPE_MAT3, UNIFORMTYPE_MAT4, UNIFORMTYPE_MAT4ARRAY, UNIFORMTYPE_TEXTURE2D, UNIFORMTYPE_TEXTURE2D_ARRAY, UNIFORMTYPE_TEXTURE2D_SHADOW, UNIFORMTYPE_TEXTURE3D, UNIFORMTYPE_TEXTURECUBE, UNIFORMTYPE_TEXTURECUBE_SHADOW, UNIFORMTYPE_UINT, UNIFORMTYPE_UINTARRAY, UNIFORMTYPE_UTEXTURE2D, UNIFORMTYPE_UTEXTURE2D_ARRAY, UNIFORMTYPE_UTEXTURE3D, UNIFORMTYPE_UTEXTURECUBE, UNIFORMTYPE_UVEC2, UNIFORMTYPE_UVEC2ARRAY, UNIFORMTYPE_UVEC3, UNIFORMTYPE_UVEC3ARRAY, UNIFORMTYPE_UVEC4, UNIFORMTYPE_UVEC4ARRAY, UNIFORMTYPE_VEC2, UNIFORMTYPE_VEC2ARRAY, UNIFORMTYPE_VEC3, UNIFORMTYPE_VEC3ARRAY, UNIFORMTYPE_VEC4, UNIFORMTYPE_VEC4ARRAY, UNIFORM_BUFFER_DEFAULT_SLOT_NAME, UNUSED_UNIFORM_NAME, URI, UniformBufferFormat, UniformFormat, UsdzExporter, VIEW_CENTER, VIEW_LEFT, VIEW_RIGHT, Vec2, Vec3, Vec4, VertexBuffer, VertexFormat, VertexIterator, ViewCube, WORKBUFFER_UPDATE_ALWAYS, WORKBUFFER_UPDATE_AUTO, WORKBUFFER_UPDATE_ONCE, WasmModule, WebglGraphicsDevice, WebgpuGraphicsDevice, WorldClusters, XRDEPTHSENSINGFORMAT_F32, XRDEPTHSENSINGFORMAT_L8A8, XRDEPTHSENSINGFORMAT_R16U, XRDEPTHSENSINGUSAGE_CPU, XRDEPTHSENSINGUSAGE_GPU, XREYE_LEFT, XREYE_NONE, XREYE_RIGHT, XRHAND_LEFT, XRHAND_NONE, XRHAND_RIGHT, XRPAD_A, XRPAD_B, XRPAD_SQUEEZE, XRPAD_STICK_BUTTON, XRPAD_STICK_X, XRPAD_STICK_Y, XRPAD_TOUCHPAD_BUTTON, XRPAD_TOUCHPAD_X, XRPAD_TOUCHPAD_Y, XRPAD_TRIGGER, XRSPACE_BOUNDEDFLOOR, XRSPACE_LOCAL, XRSPACE_LOCALFLOOR, XRSPACE_UNBOUNDED, XRSPACE_VIEWER, XRTARGETRAY_GAZE, XRTARGETRAY_POINTER, XRTARGETRAY_SCREEN, XRTRACKABLE_MESH, XRTRACKABLE_PLANE, XRTRACKABLE_POINT, XRTYPE_AR, XRTYPE_INLINE, XRTYPE_VR, XrAnchor, XrAnchors, XrDomOverlay, XrFinger, XrHand, XrHitTest, XrHitTestSource, XrImageTracking, XrInput, XrInputSource, XrJoint, XrLightEstimation, XrManager, XrMeshDetection, XrPlane, XrPlaneDetection, XrTrackedImage, XrView, XrViews, ZoneComponent, ZoneComponentSystem, ambientSrcNames, app, basisInitialize, bindGroupNames, blendNames, calculateNormals, calculateTangents, createBox, createCapsule, createCone, createCylinder, createGraphicsDevice, createMesh, createPlane, createScript, createShader, createShaderFromCode, createSphere, createTorus, createURI, cubemaProjectionNames, ditherNames, dracoDecode, dracoInitialize, drawFullscreenQuad, drawQuadWithShader, extend, fresnelNames, gammaNames, getGlslShaderType, getPixelFormatArrayType, getReservedScriptNames, getTouchTargetCoords, getWgslShaderType, guid, http, indexFormatByteSize, isCompressedPixelFormat, isIntegerPixelFormat, isSrgbPixelFormat, lightFalloffNames, lightShapeNames, lightTypeNames, math, now, path, pixelFormatGammaToLinear, pixelFormatInfo, pixelFormatLinearToGamma, platform, primitiveGlslToWgslTypeMap, reflectionSrcNames, registerScript, reprojectTexture, requiresManualGamma, revision, script, semanticToLocation, shaderChunks, shadowTypeInfo, specularOcclusionNames, spriteRenderModeNames, string, tonemapNames, typedArrayIndexFormats, typedArrayIndexFormatsByteSize, typedArrayToType, typedArrayTypes, typedArrayTypesByteSize, uniformTypeToName, uniformTypeToNameMapWGSL, uniformTypeToNameWGSL, uniformTypeToStorage, version, vertexTypesNames };

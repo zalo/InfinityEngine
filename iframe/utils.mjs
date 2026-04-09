@@ -1,7 +1,7 @@
 import files from 'examples/files';
 
-// Use the iframe's own location to compute rootPath so it works
-// both standalone and when embedded in the comparison demo wrapper.
+// Use the iframe's own location for rootPath so it works both standalone
+// and when embedded in the comparison demo wrapper.
 const selfHref = window.location.href;
 const topHref = window.top?.location.href ?? selfHref;
 const href = topHref;

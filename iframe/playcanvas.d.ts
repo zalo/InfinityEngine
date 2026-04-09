@@ -65575,6 +65575,391 @@ declare function createShader(device: any, vsName: any, fsName: any, useTransfor
 declare function createShaderFromCode(device: any, vsCode: any, fsCode: any, uniqueName: any, attributes: any, useTransformFeedback?: boolean, shaderDefinitionOptions?: {}): Shader;
 
 /**
+ * Collision shape component for Rapier physics.
+ * Stores shape description; the actual Rapier collider is created by the RigidBody system.
+ *
+ * @category Physics
+ */
+declare class RapierCollisionComponent extends Component {
+    /** @private */
+    private _type;
+    /** @private */
+    private _halfExtents;
+    /** @private */
+    private _radius;
+    /** @private */
+    private _height;
+    /** @private */
+    private _axis;
+    /** @private */
+    private _linearOffset;
+    /** @private */
+    private _angularOffset;
+    set type(v: string);
+    get type(): string;
+    set halfExtents(v: Vec3);
+    get halfExtents(): Vec3;
+    set radius(v: number);
+    get radius(): number;
+    set height(v: number);
+    get height(): number;
+    set axis(v: number);
+    get axis(): number;
+    set linearOffset(v: Vec3);
+    get linearOffset(): Vec3;
+    set angularOffset(v: Quat);
+    get angularOffset(): Quat;
+    /** @private */
+    private _rebuild;
+}
+/**
+ * Manages RapierCollisionComponents.
+ *
+ * @category Physics
+ */
+declare class RapierCollisionComponentSystem extends ComponentSystem {
+    constructor(app: any);
+    id: string;
+    ComponentType: typeof RapierCollisionComponent;
+    DataType: typeof RapierCollisionComponentData;
+    schema: string[];
+    initializeComponentData(component: any, data: any, properties: any): void;
+    cloneComponent(entity: any, clone: any): Component;
+}
+/**
+ * Rapier-backed rigid body component. Drop-in replacement for the Ammo.js
+ * RigidBodyComponent with the same public API.
+ *
+ * @category Physics
+ */
+declare class RapierRigidBodyComponent extends Component {
+    static EVENT_CONTACT: string;
+    static EVENT_COLLISION_START: string;
+    static EVENT_COLLISION_END: string;
+    static EVENT_TRIGGER_ENTER: string;
+    static EVENT_TRIGGER_LEAVE: string;
+    /** @private */ private _type;
+    /** @private */ private _mass;
+    /** @private */ private _linearDamping;
+    /** @private */ private _angularDamping;
+    /** @private */ private _linearFactor;
+    /** @private */ private _angularFactor;
+    /** @private */ private _friction;
+    /** @private */ private _rollingFriction;
+    /** @private */ private _restitution;
+    /** @private */ private _group;
+    /** @private */ private _mask;
+    /**
+     * Rapier rigid body handle (integer).
+     * @type {number}
+     * @private
+     */
+    private _bodyHandle;
+    /**
+     * Rapier collider handle (integer).
+     * @type {number}
+     * @private
+     */
+    private _colliderHandle;
+    /**
+     * Whether this body is currently in the simulation.
+     * @type {boolean}
+     * @private
+     */
+    private _simulated;
+    /**
+     * Whether the body was active last frame (for sleep detection).
+     * @type {boolean}
+     * @private
+     */
+    private _wasActive;
+    set type(v: string);
+    get type(): string;
+    set mass(v: number);
+    get mass(): number;
+    set linearDamping(v: number);
+    get linearDamping(): number;
+    set angularDamping(v: number);
+    get angularDamping(): number;
+    set friction(v: number);
+    get friction(): number;
+    set restitution(v: number);
+    get restitution(): number;
+    set linearVelocity(v: Vec3);
+    get linearVelocity(): Vec3;
+    set angularVelocity(v: Vec3);
+    get angularVelocity(): Vec3;
+    set linearFactor(v: Vec3);
+    get linearFactor(): Vec3;
+    set angularFactor(v: Vec3);
+    get angularFactor(): Vec3;
+    /**
+     * Returns true if the rigid body is currently actively being simulated.
+     *
+     * @returns {boolean} True if the body is active.
+     */
+    isActive(): boolean;
+    /**
+     * Forcibly activate the rigid body simulation.
+     */
+    activate(): void;
+    /**
+     * Apply a force to the body at its center of mass.
+     *
+     * @param {number|Vec3} x - Force x or Vec3.
+     * @param {number} [y] - Force y.
+     * @param {number} [z] - Force z.
+     */
+    applyForce(x: number | Vec3, y?: number, z?: number): void;
+    /**
+     * Apply an impulse to the body at its center of mass.
+     *
+     * @param {number|Vec3} x - Impulse x or Vec3.
+     * @param {number} [y] - Impulse y.
+     * @param {number} [z] - Impulse z.
+     */
+    applyImpulse(x: number | Vec3, y?: number, z?: number): void;
+    /**
+     * Apply a torque to the body.
+     *
+     * @param {number|Vec3} x - Torque x or Vec3.
+     * @param {number} [y] - Torque y.
+     * @param {number} [z] - Torque z.
+     */
+    applyTorque(x: number | Vec3, y?: number, z?: number): void;
+    /**
+     * Apply a torque impulse to the body.
+     *
+     * @param {number|Vec3} x - Impulse x or Vec3.
+     * @param {number} [y] - Impulse y.
+     * @param {number} [z] - Impulse z.
+     */
+    applyTorqueImpulse(x: number | Vec3, y?: number, z?: number): void;
+    /**
+     * Teleport the entity to a new position and optionally rotation.
+     *
+     * @param {number|Vec3} x - World x or Vec3.
+     * @param {number} [y] - World y.
+     * @param {number} [z] - World z.
+     * @param {number} [rx] - Rotation euler x.
+     * @param {number} [ry] - Rotation euler y.
+     * @param {number} [rz] - Rotation euler z.
+     */
+    teleport(x: number | Vec3, y?: number, z?: number, rx?: number, ry?: number, rz?: number): void;
+    /** @private */
+    private _getRapierBody;
+    /** @private */
+    private _rebuildBody;
+    /** @private */
+    private _updateMass;
+}
+/**
+ * Rapier-backed rigid body component system. Drop-in replacement for PlayCanvas's
+ * Ammo.js RigidBodyComponentSystem.
+ *
+ * Manages a Rapier physics world, creates/destroys bodies, steps the simulation,
+ * and syncs transforms between Rapier bodies and PlayCanvas entities.
+ *
+ * @category Physics
+ */
+declare class RapierRigidBodyComponentSystem extends ComponentSystem {
+    /**
+     * Rapier module reference.
+     * @type {any}
+     * @private
+     */
+    private _RAPIER;
+    /**
+     * Rapier physics world.
+     * @type {any}
+     * @private
+     */
+    private _world;
+    /**
+     * Rapier event queue.
+     * @type {any}
+     * @private
+     */
+    private _eventQueue;
+    /**
+     * Map body handle → RapierRigidBodyComponent.
+     * @type {Map<number, RapierRigidBodyComponent>}
+     * @private
+     */
+    private _bodyComponentMap;
+    /**
+     * Dynamic body components (updated after step).
+     * @type {RapierRigidBodyComponent[]}
+     * @private
+     */
+    private _dynamic;
+    /**
+     * Kinematic body components (updated before step).
+     * @type {RapierRigidBodyComponent[]}
+     * @private
+     */
+    private _kinematic;
+    /**
+     * @type {number}
+     */
+    maxSubSteps: number;
+    /**
+     * @type {number}
+     */
+    fixedTimeStep: number;
+    /**
+     * @type {Vec3}
+     */
+    gravity: Vec3;
+    /**
+     * Whether the Rapier WASM module has been loaded.
+     * @type {boolean}
+     */
+    get isLoaded(): boolean;
+    id: string;
+    _stats: {
+        fps: number;
+        ms: number;
+        dt: number;
+        updateStart: number;
+        updateTime: number;
+        renderStart: number;
+        renderTime: number;
+        physicsStart: number;
+        physicsTime: number;
+        scriptUpdateStart: number;
+        scriptUpdate: number;
+        scriptPostUpdateStart: number;
+        scriptPostUpdate: number;
+        animUpdateStart: number;
+        animUpdate: number;
+        cullTime: number;
+        sortTime: number;
+        skinTime: number;
+        morphTime: number;
+        instancingTime: number;
+        triangles: number;
+        gsplats: number;
+        gsplatSort: number;
+        gsplatBufferCopy: number;
+        otherPrimitives: number;
+        shaders: number;
+        materials: number;
+        cameras: number;
+        shadowMapUpdates: number;
+        shadowMapTime: number;
+        depthMapTime: number;
+        forwardTime: number;
+        lightClustersTime: number;
+        lightClusters: number;
+        _timeToCountFrames: number;
+        _fpsAccum: number;
+    };
+    ComponentType: typeof RapierRigidBodyComponent;
+    DataType: typeof RapierRigidBodyComponentData;
+    schema: string[];
+    /**
+     * Initialize Rapier. Must be called and awaited before physics works.
+     * Automatically called if you use `RapierRigidBodyComponentSystem.loadRapier()`.
+     *
+     * @param {any} RAPIER - The imported Rapier module.
+     */
+    initializeRapier(RAPIER: any): void;
+    /**
+     * Load Rapier WASM and initialize the world.
+     *
+     * @param {string} [importPath='@dimforge/rapier3d-compat'] - Import path for Rapier.
+     * @returns {Promise<void>}
+     */
+    loadRapier(importPath?: string): Promise<void>;
+    initializeComponentData(component: any, data: any, properties: any): void;
+    cloneComponent(entity: any, clone: any): Component;
+    /**
+     * Create a Rapier rigid body + collider for a component.
+     *
+     * @param {RapierRigidBodyComponent} component - The component.
+     * @private
+     */
+    private _createBody;
+    /**
+     * Create a Rapier ColliderDesc from a collision component.
+     *
+     * @param {RapierCollisionComponent} collision - The collision component.
+     * @returns {any} A Rapier ColliderDesc or null.
+     * @private
+     */
+    private _createColliderDesc;
+    /**
+     * Remove a body from the Rapier world.
+     *
+     * @param {RapierRigidBodyComponent} component - The component.
+     * @private
+     */
+    private _removeBody;
+    /**
+     * Per-frame physics update. Steps the Rapier world and syncs transforms.
+     *
+     * @param {number} dt - Frame delta time in seconds.
+     * @private
+     */
+    private _onUpdate;
+    /**
+     * Process a collision event from Rapier.
+     *
+     * @param {number} h1 - Collider handle 1.
+     * @param {number} h2 - Collider handle 2.
+     * @param {boolean} started - True if collision started.
+     * @private
+     */
+    private _processCollisionEvent;
+    /**
+     * Raycast and return the first hit.
+     *
+     * @param {Vec3} start - Ray origin.
+     * @param {Vec3} end - Ray end point.
+     * @returns {{ entity: Entity, point: Vec3, normal: Vec3, hitFraction: number }|null} Result.
+     */
+    raycastFirst(start: Vec3, end: Vec3): {
+        entity: Entity;
+        point: Vec3;
+        normal: Vec3;
+        hitFraction: number;
+    } | null;
+    /**
+     * @param {Entity} entity - Entity being removed.
+     * @param {RapierRigidBodyComponent} component - Component being removed.
+     * @private
+     */
+    private _onBeforeRemove;
+}
+
+declare class RapierCollisionComponentData {
+    enabled: boolean;
+    type: string;
+    halfExtents: Vec3;
+    radius: number;
+    height: number;
+    axis: number;
+    linearOffset: Vec3;
+    angularOffset: Quat;
+    initialized: boolean;
+}
+declare class RapierRigidBodyComponentData {
+    enabled: boolean;
+    type: string;
+    mass: number;
+    linearDamping: number;
+    angularDamping: number;
+    linearFactor: Vec3;
+    angularFactor: Vec3;
+    friction: number;
+    rollingFriction: number;
+    restitution: number;
+    group: number;
+    mask: number;
+}
+
+/**
  * Initialize the Draco mesh decoder.
  *
  * @param {object} [config] - The Draco decoder configuration.
@@ -65872,6 +66257,6 @@ declare function getReservedScriptNames(): Set<string>;
 
 declare const reservedAttributes: {};
 
-export { ABSOLUTE_URL, ACTION_GAMEPAD, ACTION_KEYBOARD, ACTION_MOUSE, ADDRESS_CLAMP_TO_EDGE, ADDRESS_MIRRORED_REPEAT, ADDRESS_REPEAT, AMBIENTSRC_AMBIENTSH, AMBIENTSRC_CONSTANT, AMBIENTSRC_ENVALATLAS, ANIM_BLEND_1D, ANIM_BLEND_2D_CARTESIAN, ANIM_BLEND_2D_DIRECTIONAL, ANIM_BLEND_DIRECT, ANIM_CONTROL_STATES, ANIM_EQUAL_TO, ANIM_GREATER_THAN, ANIM_GREATER_THAN_EQUAL_TO, ANIM_INTERRUPTION_NEXT, ANIM_INTERRUPTION_NEXT_PREV, ANIM_INTERRUPTION_NONE, ANIM_INTERRUPTION_PREV, ANIM_INTERRUPTION_PREV_NEXT, ANIM_LAYER_ADDITIVE, ANIM_LAYER_OVERWRITE, ANIM_LESS_THAN, ANIM_LESS_THAN_EQUAL_TO, ANIM_NOT_EQUAL_TO, ANIM_PARAMETER_BOOLEAN, ANIM_PARAMETER_FLOAT, ANIM_PARAMETER_INTEGER, ANIM_PARAMETER_TRIGGER, ANIM_STATE_ANY, ANIM_STATE_END, ANIM_STATE_START, ASPECT_AUTO, ASPECT_MANUAL, ASSET_ANIMATION, ASSET_AUDIO, ASSET_CONTAINER, ASSET_CSS, ASSET_CUBEMAP, ASSET_HTML, ASSET_IMAGE, ASSET_JSON, ASSET_MATERIAL, ASSET_MODEL, ASSET_SCRIPT, ASSET_SHADER, ASSET_TEXT, ASSET_TEXTURE, ASSET_TEXTUREATLAS, AXIS_KEY, AXIS_MOUSE_X, AXIS_MOUSE_Y, AXIS_PAD_L_X, AXIS_PAD_L_Y, AXIS_PAD_R_X, AXIS_PAD_R_Y, AnimBinder, AnimClip, AnimClipHandler, AnimComponent, AnimComponentLayer, AnimComponentSystem, AnimController, AnimCurve, AnimData, AnimEvaluator, AnimEvents, AnimSnapshot, AnimStateGraph, AnimStateGraphHandler, AnimTarget, AnimTrack, Animation, AnimationComponent, AnimationComponentSystem, AnimationHandler, AnimationKey, AnimationNode, AppBase, AppOptions, Application, Asset, AssetListLoader, AssetReference, AssetRegistry, AudioHandler, AudioListenerComponent, AudioListenerComponentSystem, BAKE_COLOR, BAKE_COLORDIR, BINDGROUP_MESH, BINDGROUP_MESH_UB, BINDGROUP_VIEW, BLENDEQUATION_ADD, BLENDEQUATION_MAX, BLENDEQUATION_MIN, BLENDEQUATION_REVERSE_SUBTRACT, BLENDEQUATION_SUBTRACT, BLENDMODE_CONSTANT, BLENDMODE_CONSTANT_ALPHA, BLENDMODE_CONSTANT_COLOR, BLENDMODE_DST_ALPHA, BLENDMODE_DST_COLOR, BLENDMODE_ONE, BLENDMODE_ONE_MINUS_CONSTANT, BLENDMODE_ONE_MINUS_CONSTANT_ALPHA, BLENDMODE_ONE_MINUS_CONSTANT_COLOR, BLENDMODE_ONE_MINUS_DST_ALPHA, BLENDMODE_ONE_MINUS_DST_COLOR, BLENDMODE_ONE_MINUS_SRC_ALPHA, BLENDMODE_ONE_MINUS_SRC_COLOR, BLENDMODE_SRC_ALPHA, BLENDMODE_SRC_ALPHA_SATURATE, BLENDMODE_SRC_COLOR, BLENDMODE_ZERO, BLEND_ADDITIVE, BLEND_ADDITIVEALPHA, BLEND_MAX, BLEND_MIN, BLEND_MULTIPLICATIVE, BLEND_MULTIPLICATIVE2X, BLEND_NONE, BLEND_NORMAL, BLEND_PREMULTIPLIED, BLEND_SCREEN, BLEND_SUBTRACTIVE, BLUR_BOX, BLUR_GAUSSIAN, BODYFLAG_KINEMATIC_OBJECT, BODYFLAG_NORESPONSE_OBJECT, BODYFLAG_STATIC_OBJECT, BODYGROUP_DEFAULT, BODYGROUP_DYNAMIC, BODYGROUP_ENGINE_1, BODYGROUP_ENGINE_2, BODYGROUP_ENGINE_3, BODYGROUP_KINEMATIC, BODYGROUP_NONE, BODYGROUP_STATIC, BODYGROUP_TRIGGER, BODYGROUP_USER_1, BODYGROUP_USER_2, BODYGROUP_USER_3, BODYGROUP_USER_4, BODYGROUP_USER_5, BODYGROUP_USER_6, BODYGROUP_USER_7, BODYGROUP_USER_8, BODYMASK_ALL, BODYMASK_NONE, BODYMASK_NOT_STATIC, BODYMASK_NOT_STATIC_KINEMATIC, BODYMASK_STATIC, BODYSTATE_ACTIVE_TAG, BODYSTATE_DISABLE_DEACTIVATION, BODYSTATE_DISABLE_SIMULATION, BODYSTATE_ISLAND_SLEEPING, BODYSTATE_WANTS_DEACTIVATION, BODYTYPE_DYNAMIC, BODYTYPE_KINEMATIC, BODYTYPE_STATIC, BUFFERUSAGE_COPY_DST, BUFFERUSAGE_COPY_SRC, BUFFERUSAGE_INDEX, BUFFERUSAGE_INDIRECT, BUFFERUSAGE_READ, BUFFERUSAGE_STORAGE, BUFFERUSAGE_UNIFORM, BUFFERUSAGE_VERTEX, BUFFERUSAGE_WRITE, BUFFER_DYNAMIC, BUFFER_GPUDYNAMIC, BUFFER_STATIC, BUFFER_STREAM, BUTTON_TRANSITION_MODE_SPRITE_CHANGE, BUTTON_TRANSITION_MODE_TINT, Batch, BatchGroup, BatchManager, BinaryHandler, BindGroupFormat, BindStorageBufferFormat, BindStorageTextureFormat, BindTextureFormat, BindUniformBufferFormat, BlendState, BoundingBox, BoundingSphere, BoxGeometry, Bundle, BundleHandler, BundleRegistry, ButtonComponent, ButtonComponentSystem, CHUNKAPI_1_51, CHUNKAPI_1_55, CHUNKAPI_1_56, CHUNKAPI_1_57, CHUNKAPI_1_58, CHUNKAPI_1_60, CHUNKAPI_1_62, CHUNKAPI_1_65, CHUNKAPI_1_70, CHUNKAPI_2_1, CHUNKAPI_2_3, CHUNKAPI_2_5, CHUNKAPI_2_6, CHUNKAPI_2_7, CHUNKAPI_2_8, CLEARFLAG_COLOR, CLEARFLAG_DEPTH, CLEARFLAG_STENCIL, CUBEFACE_NEGX, CUBEFACE_NEGY, CUBEFACE_NEGZ, CUBEFACE_POSX, CUBEFACE_POSY, CUBEFACE_POSZ, CUBEPROJ_BOX, CUBEPROJ_NONE, CULLFACE_BACK, CULLFACE_FRONT, CULLFACE_FRONTANDBACK, CULLFACE_NONE, CURVE_LINEAR, CURVE_SMOOTHSTEP, CURVE_SPLINE, CURVE_STEP, Camera, CameraComponent, CameraComponentSystem, CameraFrame, CameraFrameOptions, CanvasFont, CapsuleGeometry, ChunkUtils, CollisionComponent, CollisionComponentSystem, Color, Component, ComponentSystem, ComponentSystemRegistry, Compute, ComputeRadixSort, ConeGeometry, ContactPoint, ContactResult, ContainerHandler, ContainerResource, Controller, CssHandler, CubemapHandler, Curve, CurveSet, CylinderGeometry, DETAILMODE_ADD, DETAILMODE_MAX, DETAILMODE_MIN, DETAILMODE_MUL, DETAILMODE_OVERLAY, DETAILMODE_SCREEN, DEVICETYPE_NULL, DEVICETYPE_WEBGL2, DEVICETYPE_WEBGPU, DEVICETYPE_WEBGPU_BARE, DISPLAYFORMAT_HDR, DISPLAYFORMAT_LDR, DISPLAYFORMAT_LDR_SRGB, DISTANCE_EXPONENTIAL, DISTANCE_INVERSE, DISTANCE_LINEAR, DITHER_BAYER8, DITHER_BLUENOISE, DITHER_IGNNOISE, DITHER_NONE, DefaultAnimBinder, DepthState, DeterministicSimulation, DomeGeometry, DrawCommands, DualGestureSource, ELEMENTTYPE_GROUP, ELEMENTTYPE_IMAGE, ELEMENTTYPE_TEXT, EMITTERSHAPE_BOX, EMITTERSHAPE_SPHERE, EVENT_CULL_END, EVENT_GAMEPADCONNECTED, EVENT_GAMEPADDISCONNECTED, EVENT_KEYDOWN, EVENT_KEYUP, EVENT_MOUSEDOWN, EVENT_MOUSEMOVE, EVENT_MOUSEUP, EVENT_MOUSEWHEEL, EVENT_POSTCULL, EVENT_POSTRENDER, EVENT_POSTRENDER_LAYER, EVENT_PRECULL, EVENT_PRERENDER, EVENT_PRERENDER_LAYER, EVENT_SELECT, EVENT_SELECTEND, EVENT_SELECTSTART, EVENT_TOUCHCANCEL, EVENT_TOUCHEND, EVENT_TOUCHMOVE, EVENT_TOUCHSTART, ElementComponent, ElementComponentSystem, ElementDragHelper, ElementInput, ElementInputEvent, ElementMouseEvent, ElementSelectEvent, ElementTouchEvent, Entity, EnvLighting, EventHandle, EventHandler, FILLMODE_FILL_WINDOW, FILLMODE_KEEP_ASPECT, FILLMODE_NONE, FILTER_LINEAR, FILTER_LINEAR_MIPMAP_LINEAR, FILTER_LINEAR_MIPMAP_NEAREST, FILTER_NEAREST, FILTER_NEAREST_MIPMAP_LINEAR, FILTER_NEAREST_MIPMAP_NEAREST, FITMODE_CONTAIN, FITMODE_COVER, FITMODE_STRETCH, FITTING_BOTH, FITTING_NONE, FITTING_SHRINK, FITTING_STRETCH, FOG_EXP, FOG_EXP2, FOG_LINEAR, FOG_NONE, FONT_BITMAP, FONT_MSDF, FRESNEL_NONE, FRESNEL_SCHLICK, FRONTFACE_CCW, FRONTFACE_CW, FUNC_ALWAYS, FUNC_EQUAL, FUNC_GREATER, FUNC_GREATEREQUAL, FUNC_LESS, FUNC_LESSEQUAL, FUNC_NEVER, FUNC_NOTEQUAL, FixedTimestepManager, FloatPacking, FlyController, FocusController, FogParams, FolderHandler, Font, FontHandler, ForwardRenderer, FramePass, FramePassBloom, FramePassCameraFrame, FramePassColorGrab, FramePassDof, FramePassRadixSort, Frustum, GAMMA_NONE, GAMMA_SRGB, GIZMOAXIS_FACE, GIZMOAXIS_X, GIZMOAXIS_XY, GIZMOAXIS_XYZ, GIZMOAXIS_XZ, GIZMOAXIS_Y, GIZMOAXIS_YZ, GIZMOAXIS_Z, GIZMOSPACE_LOCAL, GIZMOSPACE_WORLD, GSPLATDATA_COMPACT, GSPLATDATA_LARGE, GSPLAT_FORWARD, GSPLAT_RENDERER_AUTO, GSPLAT_RENDERER_COMPUTE, GSPLAT_RENDERER_RASTER_CPU_SORT, GSPLAT_RENDERER_RASTER_GPU_SORT, GSPLAT_SHADOW, GSPLAT_STREAM_INSTANCE, GSPLAT_STREAM_RESOURCE, GSplatComponent, GSplatComponentSystem, GSplatContainer, GSplatData, GSplatFormat, GSplatHandler, GSplatInstance, GSplatProcessor, GSplatResource, GSplatResourceBase, GSplatSogData, GSplatSogResource, GamePads, GamepadSource, Geometry, Gizmo, GltfExporter, GraphNode, GraphicsDevice, HierarchyHandler, HtmlHandler, Http, I18n, INDEXFORMAT_UINT16, INDEXFORMAT_UINT32, INDEXFORMAT_UINT8, INTERPOLATION_CUBIC, INTERPOLATION_LINEAR, INTERPOLATION_STEP, ImageElement, IndexBuffer, IndexedList, InputConsumer, InputController, InputDelta, InputFrame, InputSource, JointComponent, JointComponentSystem, JsonHandler, JsonStandardMaterialParser, KEY_0, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_A, KEY_ADD, KEY_ALT, KEY_B, KEY_BACKSPACE, KEY_BACK_SLASH, KEY_C, KEY_CAPS_LOCK, KEY_CLOSE_BRACKET, KEY_COMMA, KEY_CONTEXT_MENU, KEY_CONTROL, KEY_D, KEY_DECIMAL, KEY_DELETE, KEY_DIVIDE, KEY_DOWN, KEY_E, KEY_END, KEY_ENTER, KEY_EQUAL, KEY_ESCAPE, KEY_F, KEY_F1, KEY_F10, KEY_F11, KEY_F12, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_G, KEY_H, KEY_HOME, KEY_I, KEY_INSERT, KEY_J, KEY_K, KEY_L, KEY_LEFT, KEY_M, KEY_META, KEY_MULTIPLY, KEY_N, KEY_NUMPAD_0, KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4, KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_O, KEY_OPEN_BRACKET, KEY_P, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_PAUSE, KEY_PERIOD, KEY_PRINT_SCREEN, KEY_Q, KEY_R, KEY_RETURN, KEY_RIGHT, KEY_S, KEY_SEMICOLON, KEY_SEPARATOR, KEY_SHIFT, KEY_SLASH, KEY_SPACE, KEY_SUBTRACT, KEY_T, KEY_TAB, KEY_U, KEY_UP, KEY_V, KEY_W, KEY_WINDOWS, KEY_X, KEY_Y, KEY_Z, Kernel, Key, Keyboard, KeyboardEvent, KeyboardMouseSource, LAYERID_DEPTH, LAYERID_IMMEDIATE, LAYERID_SKYBOX, LAYERID_UI, LAYERID_WORLD, LAYER_GIZMO, LAYER_HUD, LAYER_WORLD, LIGHTFALLOFF_INVERSESQUARED, LIGHTFALLOFF_LINEAR, LIGHTSHAPE_DISK, LIGHTSHAPE_PUNCTUAL, LIGHTSHAPE_RECT, LIGHTSHAPE_SPHERE, LIGHTTYPE_COUNT, LIGHTTYPE_DIRECTIONAL, LIGHTTYPE_OMNI, LIGHTTYPE_POINT, LIGHTTYPE_SPOT, LIGHT_COLOR_DIVIDER, Layer, LayerComposition, LayoutCalculator, LayoutChildComponent, LayoutChildComponentSystem, LayoutGroupComponent, LayoutGroupComponentSystem, Light, LightComponent, LightComponentSystem, LightingParams, Lightmapper, LitMaterial, LitOptions, LitShaderOptions, LocalizedAsset, MASK_AFFECT_DYNAMIC, MASK_AFFECT_LIGHTMAPPED, MASK_BAKE, MOTION_FREE, MOTION_LIMITED, MOTION_LOCKED, MOUSEBUTTON_LEFT, MOUSEBUTTON_MIDDLE, MOUSEBUTTON_NONE, MOUSEBUTTON_RIGHT, Mat3, Mat4, Material, MaterialHandler, Mesh, MeshInstance, MiniStats, Model, ModelComponent, ModelComponentSystem, ModelHandler, Morph, MorphInstance, MorphTarget, Mouse, MouseEvent, MultiTouchSource, Node, NullGraphicsDevice, ORIENTATION_HORIZONTAL, ORIENTATION_VERTICAL, OrbitController, OrientedBox, OutlineRenderer, PAD_1, PAD_2, PAD_3, PAD_4, PAD_DOWN, PAD_FACE_1, PAD_FACE_2, PAD_FACE_3, PAD_FACE_4, PAD_LEFT, PAD_L_SHOULDER_1, PAD_L_SHOULDER_2, PAD_L_STICK_BUTTON, PAD_L_STICK_X, PAD_L_STICK_Y, PAD_RIGHT, PAD_R_SHOULDER_1, PAD_R_SHOULDER_2, PAD_R_STICK_BUTTON, PAD_R_STICK_X, PAD_R_STICK_Y, PAD_SELECT, PAD_START, PAD_UP, PAD_VENDOR, PARTICLEMODE_CPU, PARTICLEMODE_GPU, PARTICLEORIENTATION_EMITTER, PARTICLEORIENTATION_SCREEN, PARTICLEORIENTATION_WORLD, PARTICLESORT_DISTANCE, PARTICLESORT_NEWER_FIRST, PARTICLESORT_NONE, PARTICLESORT_OLDER_FIRST, PIXELFORMAT_111110F, PIXELFORMAT_A8, PIXELFORMAT_ASTC_4x4, PIXELFORMAT_ASTC_4x4_SRGB, PIXELFORMAT_ATC_RGB, PIXELFORMAT_ATC_RGBA, PIXELFORMAT_BC6F, PIXELFORMAT_BC6UF, PIXELFORMAT_BC7, PIXELFORMAT_BC7_SRGBA, PIXELFORMAT_BGRA8, PIXELFORMAT_DEPTH, PIXELFORMAT_DEPTH16, PIXELFORMAT_DEPTHSTENCIL, PIXELFORMAT_DXT1, PIXELFORMAT_DXT1_SRGB, PIXELFORMAT_DXT3, PIXELFORMAT_DXT3_SRGBA, PIXELFORMAT_DXT5, PIXELFORMAT_DXT5_SRGBA, PIXELFORMAT_ETC1, PIXELFORMAT_ETC2_RGB, PIXELFORMAT_ETC2_RGBA, PIXELFORMAT_ETC2_SRGB, PIXELFORMAT_ETC2_SRGBA, PIXELFORMAT_L8, PIXELFORMAT_L8_A8, PIXELFORMAT_LA8, PIXELFORMAT_PVRTC_2BPP_RGBA_1, PIXELFORMAT_PVRTC_2BPP_RGB_1, PIXELFORMAT_PVRTC_4BPP_RGBA_1, PIXELFORMAT_PVRTC_4BPP_RGB_1, PIXELFORMAT_R16F, PIXELFORMAT_R16I, PIXELFORMAT_R16U, PIXELFORMAT_R32F, PIXELFORMAT_R32I, PIXELFORMAT_R32U, PIXELFORMAT_R4_G4_B4_A4, PIXELFORMAT_R5_G5_B5_A1, PIXELFORMAT_R5_G6_B5, PIXELFORMAT_R8, PIXELFORMAT_R8I, PIXELFORMAT_R8U, PIXELFORMAT_R8_G8_B8, PIXELFORMAT_R8_G8_B8_A8, PIXELFORMAT_RG16F, PIXELFORMAT_RG16I, PIXELFORMAT_RG16U, PIXELFORMAT_RG32F, PIXELFORMAT_RG32I, PIXELFORMAT_RG32U, PIXELFORMAT_RG8, PIXELFORMAT_RG8I, PIXELFORMAT_RG8S, PIXELFORMAT_RG8U, PIXELFORMAT_RGB10A2, PIXELFORMAT_RGB10A2U, PIXELFORMAT_RGB16F, PIXELFORMAT_RGB32F, PIXELFORMAT_RGB565, PIXELFORMAT_RGB8, PIXELFORMAT_RGB9E5, PIXELFORMAT_RGBA16F, PIXELFORMAT_RGBA16I, PIXELFORMAT_RGBA16U, PIXELFORMAT_RGBA32F, PIXELFORMAT_RGBA32I, PIXELFORMAT_RGBA32U, PIXELFORMAT_RGBA4, PIXELFORMAT_RGBA5551, PIXELFORMAT_RGBA8, PIXELFORMAT_RGBA8I, PIXELFORMAT_RGBA8S, PIXELFORMAT_RGBA8U, PIXELFORMAT_SBGRA8, PIXELFORMAT_SRGB, PIXELFORMAT_SRGB8, PIXELFORMAT_SRGBA, PIXELFORMAT_SRGBA8, PRIMITIVE_LINELOOP, PRIMITIVE_LINES, PRIMITIVE_LINESTRIP, PRIMITIVE_POINTS, PRIMITIVE_TRIANGLES, PRIMITIVE_TRIFAN, PRIMITIVE_TRISTRIP, PROJECTION_ORTHOGRAPHIC, PROJECTION_PERSPECTIVE, ParticleEmitter, ParticleSystemComponent, ParticleSystemComponentSystem, PhysicsBackend, Picker, Plane, PlaneGeometry, Pose, PostEffect, PostEffectQueue, PreviousTransform, ProgramLibrary, QuadRender, Quat, REFLECTIONSRC_CUBEMAP, REFLECTIONSRC_ENVATLAS, REFLECTIONSRC_ENVATLASHQ, REFLECTIONSRC_NONE, REFLECTIONSRC_SPHEREMAP, RENDERSTYLE_POINTS, RENDERSTYLE_SOLID, RENDERSTYLE_WIREFRAME, RESOLUTION_AUTO, RESOLUTION_FIXED, RIGIDBODY_ACTIVE_TAG, RIGIDBODY_CF_KINEMATIC_OBJECT, RIGIDBODY_CF_NORESPONSE_OBJECT, RIGIDBODY_CF_STATIC_OBJECT, RIGIDBODY_DISABLE_DEACTIVATION, RIGIDBODY_DISABLE_SIMULATION, RIGIDBODY_ISLAND_SLEEPING, RIGIDBODY_TYPE_DYNAMIC, RIGIDBODY_TYPE_KINEMATIC, RIGIDBODY_TYPE_STATIC, RIGIDBODY_WANTS_DEACTIVATION, RapierBackend, Ray, RaycastResult, ReadStream, RenderComponent, RenderComponentSystem, RenderHandler, RenderPass, RenderPassCompose, RenderPassDepthAwareBlur, RenderPassDownsample, RenderPassForward, RenderPassPicker, RenderPassPrepass, RenderPassShaderQuad, RenderPassSsao, RenderPassTAA, RenderPassUpsample, RenderTarget, ResourceHandler, ResourceLoader, RigidBodyComponent, RigidBodyComponentSystem, RotateGizmo, SAMPLETYPE_DEPTH, SAMPLETYPE_FLOAT, SAMPLETYPE_INT, SAMPLETYPE_UINT, SAMPLETYPE_UNFILTERABLE_FLOAT, SCALEMODE_BLEND, SCALEMODE_NONE, SCROLLBAR_VISIBILITY_SHOW_ALWAYS, SCROLLBAR_VISIBILITY_SHOW_WHEN_REQUIRED, SCROLL_MODE_BOUNCE, SCROLL_MODE_CLAMP, SCROLL_MODE_INFINITE, SEMANTIC_ATTR0, SEMANTIC_ATTR1, SEMANTIC_ATTR10, SEMANTIC_ATTR11, SEMANTIC_ATTR12, SEMANTIC_ATTR13, SEMANTIC_ATTR14, SEMANTIC_ATTR15, SEMANTIC_ATTR2, SEMANTIC_ATTR3, SEMANTIC_ATTR4, SEMANTIC_ATTR5, SEMANTIC_ATTR6, SEMANTIC_ATTR7, SEMANTIC_ATTR8, SEMANTIC_ATTR9, SEMANTIC_BLENDINDICES, SEMANTIC_BLENDWEIGHT, SEMANTIC_COLOR, SEMANTIC_NORMAL, SEMANTIC_POSITION, SEMANTIC_TANGENT, SEMANTIC_TEXCOORD, SEMANTIC_TEXCOORD0, SEMANTIC_TEXCOORD1, SEMANTIC_TEXCOORD2, SEMANTIC_TEXCOORD3, SEMANTIC_TEXCOORD4, SEMANTIC_TEXCOORD5, SEMANTIC_TEXCOORD6, SEMANTIC_TEXCOORD7, SHADERDEF_BATCH, SHADERDEF_DIRLM, SHADERDEF_INSTANCING, SHADERDEF_LM, SHADERDEF_LMAMBIENT, SHADERDEF_MORPH_NORMAL, SHADERDEF_MORPH_POSITION, SHADERDEF_MORPH_TEXTURE_BASED_INT, SHADERDEF_NOSHADOW, SHADERDEF_SCREENSPACE, SHADERDEF_SKIN, SHADERDEF_TANGENTS, SHADERDEF_UV0, SHADERDEF_UV1, SHADERDEF_VCOLOR, SHADERLANGUAGE_GLSL, SHADERLANGUAGE_WGSL, SHADERPASS_ALBEDO, SHADERPASS_AO, SHADERPASS_EMISSION, SHADERPASS_FORWARD, SHADERPASS_GLOSS, SHADERPASS_LIGHTING, SHADERPASS_METALNESS, SHADERPASS_OPACITY, SHADERPASS_SPECULARITY, SHADERPASS_UV0, SHADERPASS_WORLDNORMAL, SHADERSTAGE_COMPUTE, SHADERSTAGE_FRAGMENT, SHADERSTAGE_VERTEX, SHADERTAG_MATERIAL, SHADER_DEPTH_PICK, SHADER_FORWARD, SHADER_PICK, SHADER_PREPASS, SHADER_SHADOW, SHADOWCAMERA_NAME, SHADOWUPDATE_NONE, SHADOWUPDATE_REALTIME, SHADOWUPDATE_THISFRAME, SHADOW_CASCADE_0, SHADOW_CASCADE_1, SHADOW_CASCADE_2, SHADOW_CASCADE_3, SHADOW_CASCADE_ALL, SHADOW_PCF1, SHADOW_PCF1_16F, SHADOW_PCF1_32F, SHADOW_PCF3, SHADOW_PCF3_16F, SHADOW_PCF3_32F, SHADOW_PCF5, SHADOW_PCF5_16F, SHADOW_PCF5_32F, SHADOW_PCSS_32F, SHADOW_VSM16, SHADOW_VSM32, SHADOW_VSM_16F, SHADOW_VSM_32F, SKYTYPE_BOX, SKYTYPE_DOME, SKYTYPE_INFINITE, SORTMODE_BACK2FRONT, SORTMODE_CUSTOM, SORTMODE_FRONT2BACK, SORTMODE_MANUAL, SORTMODE_MATERIALMESH, SORTMODE_NONE, SPECOCC_AO, SPECOCC_GLOSSDEPENDENT, SPECOCC_NONE, SPRITETYPE_ANIMATED, SPRITETYPE_SIMPLE, SPRITE_RENDERMODE_SIMPLE, SPRITE_RENDERMODE_SLICED, SPRITE_RENDERMODE_TILED, SSAOTYPE_COMBINE, SSAOTYPE_LIGHTING, SSAOTYPE_NONE, STENCILOP_DECREMENT, STENCILOP_DECREMENTWRAP, STENCILOP_INCREMENT, STENCILOP_INCREMENTWRAP, STENCILOP_INVERT, STENCILOP_KEEP, STENCILOP_REPLACE, STENCILOP_ZERO, ScaleGizmo, Scene, SceneHandler, SceneRegistry, SceneRegistryItem, SceneSettingsHandler, ScopeId, ScopeSpace, ScreenComponent, ScreenComponentSystem, Script, ScriptAttributes, ScriptComponent, ScriptComponentSystem, ScriptHandler, ScriptRegistry, ScriptType, ScrollViewComponent, ScrollViewComponentSystem, ScrollbarComponent, ScrollbarComponentSystem, SeededRandom, Shader, ShaderChunks, ShaderHandler, ShaderMaterial, ShaderPass, ShaderUtils, SingleContactResult, SingleGestureSource, Skeleton, Skin, SkinBatchInstance, SkinInstance, Sky, SortedLoopArray, Sound, SoundComponent, SoundComponentSystem, SoundInstance, SoundInstance3d, SoundManager, SoundSlot, SphereGeometry, Sprite, SpriteAnimationClip, SpriteComponent, SpriteComponentSystem, SpriteHandler, StandardMaterial, StandardMaterialOptions, StencilParameters, StorageBuffer, TEXHINT_ASSET, TEXHINT_LIGHTMAP, TEXHINT_NONE, TEXHINT_SHADOWMAP, TEXPROPERTY_ADDRESS_U, TEXPROPERTY_ADDRESS_V, TEXPROPERTY_ADDRESS_W, TEXPROPERTY_ALL, TEXPROPERTY_ANISOTROPY, TEXPROPERTY_COMPARE_FUNC, TEXPROPERTY_COMPARE_ON_READ, TEXPROPERTY_MAG_FILTER, TEXPROPERTY_MIN_FILTER, TEXTUREDIMENSION_1D, TEXTUREDIMENSION_2D, TEXTUREDIMENSION_2D_ARRAY, TEXTUREDIMENSION_3D, TEXTUREDIMENSION_CUBE, TEXTUREDIMENSION_CUBE_ARRAY, TEXTURELOCK_NONE, TEXTURELOCK_READ, TEXTURELOCK_WRITE, TEXTUREPROJECTION_CUBE, TEXTUREPROJECTION_EQUIRECT, TEXTUREPROJECTION_NONE, TEXTUREPROJECTION_OCTAHEDRAL, TEXTURETYPE_DEFAULT, TEXTURETYPE_RGBE, TEXTURETYPE_RGBM, TEXTURETYPE_RGBP, TEXTURETYPE_SWIZZLEGGGR, TONEMAP_ACES, TONEMAP_ACES2, TONEMAP_FILMIC, TONEMAP_HEJL, TONEMAP_LINEAR, TONEMAP_NEUTRAL, TONEMAP_NONE, TRACEID_ASSETS, TRACEID_BINDGROUPFORMAT_ALLOC, TRACEID_BINDGROUP_ALLOC, TRACEID_COMPUTEPIPELINE_ALLOC, TRACEID_ELEMENT, TRACEID_GPU_TIMINGS, TRACEID_OCTREE_RESOURCES, TRACEID_PIPELINELAYOUT_ALLOC, TRACEID_RENDERPIPELINE_ALLOC, TRACEID_RENDER_ACTION, TRACEID_RENDER_FRAME, TRACEID_RENDER_FRAME_TIME, TRACEID_RENDER_PASS, TRACEID_RENDER_PASS_DETAIL, TRACEID_RENDER_QUEUE, TRACEID_RENDER_TARGET_ALLOC, TRACEID_SHADER_ALLOC, TRACEID_SHADER_COMPILE, TRACEID_TEXTURES, TRACEID_TEXTURE_ALLOC, TRACEID_VRAM_IB, TRACEID_VRAM_SB, TRACEID_VRAM_TEXTURE, TRACEID_VRAM_VB, TYPE_FLOAT16, TYPE_FLOAT32, TYPE_INT16, TYPE_INT32, TYPE_INT8, TYPE_UINT16, TYPE_UINT32, TYPE_UINT8, Tags, Template, TemplateHandler, TextElement, TextHandler, Texture, TextureAtlas, TextureAtlasHandler, TextureHandler, TextureUtils, TextureView, TorusGeometry, Touch, TouchDevice, TouchEvent, Tracing, TransformFeedback, TransformGizmo, TransformInterpolator, TranslateGizmo, Tri, UNIFORMTYPE_BOOL, UNIFORMTYPE_BOOLARRAY, UNIFORMTYPE_BVEC2, UNIFORMTYPE_BVEC2ARRAY, UNIFORMTYPE_BVEC3, UNIFORMTYPE_BVEC3ARRAY, UNIFORMTYPE_BVEC4, UNIFORMTYPE_BVEC4ARRAY, UNIFORMTYPE_FLOAT, UNIFORMTYPE_FLOATARRAY, UNIFORMTYPE_INT, UNIFORMTYPE_INTARRAY, UNIFORMTYPE_ITEXTURE2D, UNIFORMTYPE_ITEXTURE2D_ARRAY, UNIFORMTYPE_ITEXTURE3D, UNIFORMTYPE_ITEXTURECUBE, UNIFORMTYPE_IVEC2, UNIFORMTYPE_IVEC2ARRAY, UNIFORMTYPE_IVEC3, UNIFORMTYPE_IVEC3ARRAY, UNIFORMTYPE_IVEC4, UNIFORMTYPE_IVEC4ARRAY, UNIFORMTYPE_MAT2, UNIFORMTYPE_MAT3, UNIFORMTYPE_MAT4, UNIFORMTYPE_MAT4ARRAY, UNIFORMTYPE_TEXTURE2D, UNIFORMTYPE_TEXTURE2D_ARRAY, UNIFORMTYPE_TEXTURE2D_SHADOW, UNIFORMTYPE_TEXTURE3D, UNIFORMTYPE_TEXTURECUBE, UNIFORMTYPE_TEXTURECUBE_SHADOW, UNIFORMTYPE_UINT, UNIFORMTYPE_UINTARRAY, UNIFORMTYPE_UTEXTURE2D, UNIFORMTYPE_UTEXTURE2D_ARRAY, UNIFORMTYPE_UTEXTURE3D, UNIFORMTYPE_UTEXTURECUBE, UNIFORMTYPE_UVEC2, UNIFORMTYPE_UVEC2ARRAY, UNIFORMTYPE_UVEC3, UNIFORMTYPE_UVEC3ARRAY, UNIFORMTYPE_UVEC4, UNIFORMTYPE_UVEC4ARRAY, UNIFORMTYPE_VEC2, UNIFORMTYPE_VEC2ARRAY, UNIFORMTYPE_VEC3, UNIFORMTYPE_VEC3ARRAY, UNIFORMTYPE_VEC4, UNIFORMTYPE_VEC4ARRAY, UNIFORM_BUFFER_DEFAULT_SLOT_NAME, UNUSED_UNIFORM_NAME, URI, UniformBufferFormat, UniformFormat, UsdzExporter, VIEW_CENTER, VIEW_LEFT, VIEW_RIGHT, Vec2, Vec3, Vec4, VertexBuffer, VertexFormat, VertexIterator, ViewCube, WORKBUFFER_UPDATE_ALWAYS, WORKBUFFER_UPDATE_AUTO, WORKBUFFER_UPDATE_ONCE, WasmModule, WebglGraphicsDevice, WebgpuGraphicsDevice, WorldClusters, XRDEPTHSENSINGFORMAT_F32, XRDEPTHSENSINGFORMAT_L8A8, XRDEPTHSENSINGFORMAT_R16U, XRDEPTHSENSINGUSAGE_CPU, XRDEPTHSENSINGUSAGE_GPU, XREYE_LEFT, XREYE_NONE, XREYE_RIGHT, XRHAND_LEFT, XRHAND_NONE, XRHAND_RIGHT, XRPAD_A, XRPAD_B, XRPAD_SQUEEZE, XRPAD_STICK_BUTTON, XRPAD_STICK_X, XRPAD_STICK_Y, XRPAD_TOUCHPAD_BUTTON, XRPAD_TOUCHPAD_X, XRPAD_TOUCHPAD_Y, XRPAD_TRIGGER, XRSPACE_BOUNDEDFLOOR, XRSPACE_LOCAL, XRSPACE_LOCALFLOOR, XRSPACE_UNBOUNDED, XRSPACE_VIEWER, XRTARGETRAY_GAZE, XRTARGETRAY_POINTER, XRTARGETRAY_SCREEN, XRTRACKABLE_MESH, XRTRACKABLE_PLANE, XRTRACKABLE_POINT, XRTYPE_AR, XRTYPE_INLINE, XRTYPE_VR, XrAnchor, XrAnchors, XrDomOverlay, XrFinger, XrHand, XrHitTest, XrHitTestSource, XrImageTracking, XrInput, XrInputSource, XrJoint, XrLightEstimation, XrManager, XrMeshDetection, XrPlane, XrPlaneDetection, XrTrackedImage, XrView, XrViews, ZoneComponent, ZoneComponentSystem, ambientSrcNames, app, basisInitialize, bindGroupNames, blendNames, calculateNormals, calculateTangents, createBox, createCapsule, createCone, createCylinder, createGraphicsDevice, createMesh, createPlane, createScript, createShader, createShaderFromCode, createSphere, createTorus, createURI, cubemaProjectionNames, ditherNames, dracoDecode, dracoInitialize, drawFullscreenQuad, drawQuadWithShader, extend, fresnelNames, gammaNames, getGlslShaderType, getPixelFormatArrayType, getReservedScriptNames, getTouchTargetCoords, getWgslShaderType, guid, http, indexFormatByteSize, isCompressedPixelFormat, isIntegerPixelFormat, isSrgbPixelFormat, lightFalloffNames, lightShapeNames, lightTypeNames, math, now, path, pixelFormatGammaToLinear, pixelFormatInfo, pixelFormatLinearToGamma, platform, primitiveGlslToWgslTypeMap, reflectionSrcNames, registerScript, reprojectTexture, requiresManualGamma, revision, script, semanticToLocation, shaderChunks, shadowTypeInfo, specularOcclusionNames, spriteRenderModeNames, string, tonemapNames, typedArrayIndexFormats, typedArrayIndexFormatsByteSize, typedArrayToType, typedArrayTypes, typedArrayTypesByteSize, uniformTypeToName, uniformTypeToNameMapWGSL, uniformTypeToNameWGSL, uniformTypeToStorage, version, vertexTypesNames };
+export { ABSOLUTE_URL, ACTION_GAMEPAD, ACTION_KEYBOARD, ACTION_MOUSE, ADDRESS_CLAMP_TO_EDGE, ADDRESS_MIRRORED_REPEAT, ADDRESS_REPEAT, AMBIENTSRC_AMBIENTSH, AMBIENTSRC_CONSTANT, AMBIENTSRC_ENVALATLAS, ANIM_BLEND_1D, ANIM_BLEND_2D_CARTESIAN, ANIM_BLEND_2D_DIRECTIONAL, ANIM_BLEND_DIRECT, ANIM_CONTROL_STATES, ANIM_EQUAL_TO, ANIM_GREATER_THAN, ANIM_GREATER_THAN_EQUAL_TO, ANIM_INTERRUPTION_NEXT, ANIM_INTERRUPTION_NEXT_PREV, ANIM_INTERRUPTION_NONE, ANIM_INTERRUPTION_PREV, ANIM_INTERRUPTION_PREV_NEXT, ANIM_LAYER_ADDITIVE, ANIM_LAYER_OVERWRITE, ANIM_LESS_THAN, ANIM_LESS_THAN_EQUAL_TO, ANIM_NOT_EQUAL_TO, ANIM_PARAMETER_BOOLEAN, ANIM_PARAMETER_FLOAT, ANIM_PARAMETER_INTEGER, ANIM_PARAMETER_TRIGGER, ANIM_STATE_ANY, ANIM_STATE_END, ANIM_STATE_START, ASPECT_AUTO, ASPECT_MANUAL, ASSET_ANIMATION, ASSET_AUDIO, ASSET_CONTAINER, ASSET_CSS, ASSET_CUBEMAP, ASSET_HTML, ASSET_IMAGE, ASSET_JSON, ASSET_MATERIAL, ASSET_MODEL, ASSET_SCRIPT, ASSET_SHADER, ASSET_TEXT, ASSET_TEXTURE, ASSET_TEXTUREATLAS, AXIS_KEY, AXIS_MOUSE_X, AXIS_MOUSE_Y, AXIS_PAD_L_X, AXIS_PAD_L_Y, AXIS_PAD_R_X, AXIS_PAD_R_Y, AnimBinder, AnimClip, AnimClipHandler, AnimComponent, AnimComponentLayer, AnimComponentSystem, AnimController, AnimCurve, AnimData, AnimEvaluator, AnimEvents, AnimSnapshot, AnimStateGraph, AnimStateGraphHandler, AnimTarget, AnimTrack, Animation, AnimationComponent, AnimationComponentSystem, AnimationHandler, AnimationKey, AnimationNode, AppBase, AppOptions, Application, Asset, AssetListLoader, AssetReference, AssetRegistry, AudioHandler, AudioListenerComponent, AudioListenerComponentSystem, BAKE_COLOR, BAKE_COLORDIR, BINDGROUP_MESH, BINDGROUP_MESH_UB, BINDGROUP_VIEW, BLENDEQUATION_ADD, BLENDEQUATION_MAX, BLENDEQUATION_MIN, BLENDEQUATION_REVERSE_SUBTRACT, BLENDEQUATION_SUBTRACT, BLENDMODE_CONSTANT, BLENDMODE_CONSTANT_ALPHA, BLENDMODE_CONSTANT_COLOR, BLENDMODE_DST_ALPHA, BLENDMODE_DST_COLOR, BLENDMODE_ONE, BLENDMODE_ONE_MINUS_CONSTANT, BLENDMODE_ONE_MINUS_CONSTANT_ALPHA, BLENDMODE_ONE_MINUS_CONSTANT_COLOR, BLENDMODE_ONE_MINUS_DST_ALPHA, BLENDMODE_ONE_MINUS_DST_COLOR, BLENDMODE_ONE_MINUS_SRC_ALPHA, BLENDMODE_ONE_MINUS_SRC_COLOR, BLENDMODE_SRC_ALPHA, BLENDMODE_SRC_ALPHA_SATURATE, BLENDMODE_SRC_COLOR, BLENDMODE_ZERO, BLEND_ADDITIVE, BLEND_ADDITIVEALPHA, BLEND_MAX, BLEND_MIN, BLEND_MULTIPLICATIVE, BLEND_MULTIPLICATIVE2X, BLEND_NONE, BLEND_NORMAL, BLEND_PREMULTIPLIED, BLEND_SCREEN, BLEND_SUBTRACTIVE, BLUR_BOX, BLUR_GAUSSIAN, BODYFLAG_KINEMATIC_OBJECT, BODYFLAG_NORESPONSE_OBJECT, BODYFLAG_STATIC_OBJECT, BODYGROUP_DEFAULT, BODYGROUP_DYNAMIC, BODYGROUP_ENGINE_1, BODYGROUP_ENGINE_2, BODYGROUP_ENGINE_3, BODYGROUP_KINEMATIC, BODYGROUP_NONE, BODYGROUP_STATIC, BODYGROUP_TRIGGER, BODYGROUP_USER_1, BODYGROUP_USER_2, BODYGROUP_USER_3, BODYGROUP_USER_4, BODYGROUP_USER_5, BODYGROUP_USER_6, BODYGROUP_USER_7, BODYGROUP_USER_8, BODYMASK_ALL, BODYMASK_NONE, BODYMASK_NOT_STATIC, BODYMASK_NOT_STATIC_KINEMATIC, BODYMASK_STATIC, BODYSTATE_ACTIVE_TAG, BODYSTATE_DISABLE_DEACTIVATION, BODYSTATE_DISABLE_SIMULATION, BODYSTATE_ISLAND_SLEEPING, BODYSTATE_WANTS_DEACTIVATION, BODYTYPE_DYNAMIC, BODYTYPE_KINEMATIC, BODYTYPE_STATIC, BUFFERUSAGE_COPY_DST, BUFFERUSAGE_COPY_SRC, BUFFERUSAGE_INDEX, BUFFERUSAGE_INDIRECT, BUFFERUSAGE_READ, BUFFERUSAGE_STORAGE, BUFFERUSAGE_UNIFORM, BUFFERUSAGE_VERTEX, BUFFERUSAGE_WRITE, BUFFER_DYNAMIC, BUFFER_GPUDYNAMIC, BUFFER_STATIC, BUFFER_STREAM, BUTTON_TRANSITION_MODE_SPRITE_CHANGE, BUTTON_TRANSITION_MODE_TINT, Batch, BatchGroup, BatchManager, BinaryHandler, BindGroupFormat, BindStorageBufferFormat, BindStorageTextureFormat, BindTextureFormat, BindUniformBufferFormat, BlendState, BoundingBox, BoundingSphere, BoxGeometry, Bundle, BundleHandler, BundleRegistry, ButtonComponent, ButtonComponentSystem, CHUNKAPI_1_51, CHUNKAPI_1_55, CHUNKAPI_1_56, CHUNKAPI_1_57, CHUNKAPI_1_58, CHUNKAPI_1_60, CHUNKAPI_1_62, CHUNKAPI_1_65, CHUNKAPI_1_70, CHUNKAPI_2_1, CHUNKAPI_2_3, CHUNKAPI_2_5, CHUNKAPI_2_6, CHUNKAPI_2_7, CHUNKAPI_2_8, CLEARFLAG_COLOR, CLEARFLAG_DEPTH, CLEARFLAG_STENCIL, CUBEFACE_NEGX, CUBEFACE_NEGY, CUBEFACE_NEGZ, CUBEFACE_POSX, CUBEFACE_POSY, CUBEFACE_POSZ, CUBEPROJ_BOX, CUBEPROJ_NONE, CULLFACE_BACK, CULLFACE_FRONT, CULLFACE_FRONTANDBACK, CULLFACE_NONE, CURVE_LINEAR, CURVE_SMOOTHSTEP, CURVE_SPLINE, CURVE_STEP, Camera, CameraComponent, CameraComponentSystem, CameraFrame, CameraFrameOptions, CanvasFont, CapsuleGeometry, ChunkUtils, CollisionComponent, CollisionComponentSystem, Color, Component, ComponentSystem, ComponentSystemRegistry, Compute, ComputeRadixSort, ConeGeometry, ContactPoint, ContactResult, ContainerHandler, ContainerResource, Controller, CssHandler, CubemapHandler, Curve, CurveSet, CylinderGeometry, DETAILMODE_ADD, DETAILMODE_MAX, DETAILMODE_MIN, DETAILMODE_MUL, DETAILMODE_OVERLAY, DETAILMODE_SCREEN, DEVICETYPE_NULL, DEVICETYPE_WEBGL2, DEVICETYPE_WEBGPU, DEVICETYPE_WEBGPU_BARE, DISPLAYFORMAT_HDR, DISPLAYFORMAT_LDR, DISPLAYFORMAT_LDR_SRGB, DISTANCE_EXPONENTIAL, DISTANCE_INVERSE, DISTANCE_LINEAR, DITHER_BAYER8, DITHER_BLUENOISE, DITHER_IGNNOISE, DITHER_NONE, DefaultAnimBinder, DepthState, DeterministicSimulation, DomeGeometry, DrawCommands, DualGestureSource, ELEMENTTYPE_GROUP, ELEMENTTYPE_IMAGE, ELEMENTTYPE_TEXT, EMITTERSHAPE_BOX, EMITTERSHAPE_SPHERE, EVENT_CULL_END, EVENT_GAMEPADCONNECTED, EVENT_GAMEPADDISCONNECTED, EVENT_KEYDOWN, EVENT_KEYUP, EVENT_MOUSEDOWN, EVENT_MOUSEMOVE, EVENT_MOUSEUP, EVENT_MOUSEWHEEL, EVENT_POSTCULL, EVENT_POSTRENDER, EVENT_POSTRENDER_LAYER, EVENT_PRECULL, EVENT_PRERENDER, EVENT_PRERENDER_LAYER, EVENT_SELECT, EVENT_SELECTEND, EVENT_SELECTSTART, EVENT_TOUCHCANCEL, EVENT_TOUCHEND, EVENT_TOUCHMOVE, EVENT_TOUCHSTART, ElementComponent, ElementComponentSystem, ElementDragHelper, ElementInput, ElementInputEvent, ElementMouseEvent, ElementSelectEvent, ElementTouchEvent, Entity, EnvLighting, EventHandle, EventHandler, FILLMODE_FILL_WINDOW, FILLMODE_KEEP_ASPECT, FILLMODE_NONE, FILTER_LINEAR, FILTER_LINEAR_MIPMAP_LINEAR, FILTER_LINEAR_MIPMAP_NEAREST, FILTER_NEAREST, FILTER_NEAREST_MIPMAP_LINEAR, FILTER_NEAREST_MIPMAP_NEAREST, FITMODE_CONTAIN, FITMODE_COVER, FITMODE_STRETCH, FITTING_BOTH, FITTING_NONE, FITTING_SHRINK, FITTING_STRETCH, FOG_EXP, FOG_EXP2, FOG_LINEAR, FOG_NONE, FONT_BITMAP, FONT_MSDF, FRESNEL_NONE, FRESNEL_SCHLICK, FRONTFACE_CCW, FRONTFACE_CW, FUNC_ALWAYS, FUNC_EQUAL, FUNC_GREATER, FUNC_GREATEREQUAL, FUNC_LESS, FUNC_LESSEQUAL, FUNC_NEVER, FUNC_NOTEQUAL, FixedTimestepManager, FloatPacking, FlyController, FocusController, FogParams, FolderHandler, Font, FontHandler, ForwardRenderer, FramePass, FramePassBloom, FramePassCameraFrame, FramePassColorGrab, FramePassDof, FramePassRadixSort, Frustum, GAMMA_NONE, GAMMA_SRGB, GIZMOAXIS_FACE, GIZMOAXIS_X, GIZMOAXIS_XY, GIZMOAXIS_XYZ, GIZMOAXIS_XZ, GIZMOAXIS_Y, GIZMOAXIS_YZ, GIZMOAXIS_Z, GIZMOSPACE_LOCAL, GIZMOSPACE_WORLD, GSPLATDATA_COMPACT, GSPLATDATA_LARGE, GSPLAT_FORWARD, GSPLAT_RENDERER_AUTO, GSPLAT_RENDERER_COMPUTE, GSPLAT_RENDERER_RASTER_CPU_SORT, GSPLAT_RENDERER_RASTER_GPU_SORT, GSPLAT_SHADOW, GSPLAT_STREAM_INSTANCE, GSPLAT_STREAM_RESOURCE, GSplatComponent, GSplatComponentSystem, GSplatContainer, GSplatData, GSplatFormat, GSplatHandler, GSplatInstance, GSplatProcessor, GSplatResource, GSplatResourceBase, GSplatSogData, GSplatSogResource, GamePads, GamepadSource, Geometry, Gizmo, GltfExporter, GraphNode, GraphicsDevice, HierarchyHandler, HtmlHandler, Http, I18n, INDEXFORMAT_UINT16, INDEXFORMAT_UINT32, INDEXFORMAT_UINT8, INTERPOLATION_CUBIC, INTERPOLATION_LINEAR, INTERPOLATION_STEP, ImageElement, IndexBuffer, IndexedList, InputConsumer, InputController, InputDelta, InputFrame, InputSource, JointComponent, JointComponentSystem, JsonHandler, JsonStandardMaterialParser, KEY_0, KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_A, KEY_ADD, KEY_ALT, KEY_B, KEY_BACKSPACE, KEY_BACK_SLASH, KEY_C, KEY_CAPS_LOCK, KEY_CLOSE_BRACKET, KEY_COMMA, KEY_CONTEXT_MENU, KEY_CONTROL, KEY_D, KEY_DECIMAL, KEY_DELETE, KEY_DIVIDE, KEY_DOWN, KEY_E, KEY_END, KEY_ENTER, KEY_EQUAL, KEY_ESCAPE, KEY_F, KEY_F1, KEY_F10, KEY_F11, KEY_F12, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_G, KEY_H, KEY_HOME, KEY_I, KEY_INSERT, KEY_J, KEY_K, KEY_L, KEY_LEFT, KEY_M, KEY_META, KEY_MULTIPLY, KEY_N, KEY_NUMPAD_0, KEY_NUMPAD_1, KEY_NUMPAD_2, KEY_NUMPAD_3, KEY_NUMPAD_4, KEY_NUMPAD_5, KEY_NUMPAD_6, KEY_NUMPAD_7, KEY_NUMPAD_8, KEY_NUMPAD_9, KEY_O, KEY_OPEN_BRACKET, KEY_P, KEY_PAGE_DOWN, KEY_PAGE_UP, KEY_PAUSE, KEY_PERIOD, KEY_PRINT_SCREEN, KEY_Q, KEY_R, KEY_RETURN, KEY_RIGHT, KEY_S, KEY_SEMICOLON, KEY_SEPARATOR, KEY_SHIFT, KEY_SLASH, KEY_SPACE, KEY_SUBTRACT, KEY_T, KEY_TAB, KEY_U, KEY_UP, KEY_V, KEY_W, KEY_WINDOWS, KEY_X, KEY_Y, KEY_Z, Kernel, Key, Keyboard, KeyboardEvent, KeyboardMouseSource, LAYERID_DEPTH, LAYERID_IMMEDIATE, LAYERID_SKYBOX, LAYERID_UI, LAYERID_WORLD, LAYER_GIZMO, LAYER_HUD, LAYER_WORLD, LIGHTFALLOFF_INVERSESQUARED, LIGHTFALLOFF_LINEAR, LIGHTSHAPE_DISK, LIGHTSHAPE_PUNCTUAL, LIGHTSHAPE_RECT, LIGHTSHAPE_SPHERE, LIGHTTYPE_COUNT, LIGHTTYPE_DIRECTIONAL, LIGHTTYPE_OMNI, LIGHTTYPE_POINT, LIGHTTYPE_SPOT, LIGHT_COLOR_DIVIDER, Layer, LayerComposition, LayoutCalculator, LayoutChildComponent, LayoutChildComponentSystem, LayoutGroupComponent, LayoutGroupComponentSystem, Light, LightComponent, LightComponentSystem, LightingParams, Lightmapper, LitMaterial, LitOptions, LitShaderOptions, LocalizedAsset, MASK_AFFECT_DYNAMIC, MASK_AFFECT_LIGHTMAPPED, MASK_BAKE, MOTION_FREE, MOTION_LIMITED, MOTION_LOCKED, MOUSEBUTTON_LEFT, MOUSEBUTTON_MIDDLE, MOUSEBUTTON_NONE, MOUSEBUTTON_RIGHT, Mat3, Mat4, Material, MaterialHandler, Mesh, MeshInstance, MiniStats, Model, ModelComponent, ModelComponentSystem, ModelHandler, Morph, MorphInstance, MorphTarget, Mouse, MouseEvent, MultiTouchSource, Node, NullGraphicsDevice, ORIENTATION_HORIZONTAL, ORIENTATION_VERTICAL, OrbitController, OrientedBox, OutlineRenderer, PAD_1, PAD_2, PAD_3, PAD_4, PAD_DOWN, PAD_FACE_1, PAD_FACE_2, PAD_FACE_3, PAD_FACE_4, PAD_LEFT, PAD_L_SHOULDER_1, PAD_L_SHOULDER_2, PAD_L_STICK_BUTTON, PAD_L_STICK_X, PAD_L_STICK_Y, PAD_RIGHT, PAD_R_SHOULDER_1, PAD_R_SHOULDER_2, PAD_R_STICK_BUTTON, PAD_R_STICK_X, PAD_R_STICK_Y, PAD_SELECT, PAD_START, PAD_UP, PAD_VENDOR, PARTICLEMODE_CPU, PARTICLEMODE_GPU, PARTICLEORIENTATION_EMITTER, PARTICLEORIENTATION_SCREEN, PARTICLEORIENTATION_WORLD, PARTICLESORT_DISTANCE, PARTICLESORT_NEWER_FIRST, PARTICLESORT_NONE, PARTICLESORT_OLDER_FIRST, PIXELFORMAT_111110F, PIXELFORMAT_A8, PIXELFORMAT_ASTC_4x4, PIXELFORMAT_ASTC_4x4_SRGB, PIXELFORMAT_ATC_RGB, PIXELFORMAT_ATC_RGBA, PIXELFORMAT_BC6F, PIXELFORMAT_BC6UF, PIXELFORMAT_BC7, PIXELFORMAT_BC7_SRGBA, PIXELFORMAT_BGRA8, PIXELFORMAT_DEPTH, PIXELFORMAT_DEPTH16, PIXELFORMAT_DEPTHSTENCIL, PIXELFORMAT_DXT1, PIXELFORMAT_DXT1_SRGB, PIXELFORMAT_DXT3, PIXELFORMAT_DXT3_SRGBA, PIXELFORMAT_DXT5, PIXELFORMAT_DXT5_SRGBA, PIXELFORMAT_ETC1, PIXELFORMAT_ETC2_RGB, PIXELFORMAT_ETC2_RGBA, PIXELFORMAT_ETC2_SRGB, PIXELFORMAT_ETC2_SRGBA, PIXELFORMAT_L8, PIXELFORMAT_L8_A8, PIXELFORMAT_LA8, PIXELFORMAT_PVRTC_2BPP_RGBA_1, PIXELFORMAT_PVRTC_2BPP_RGB_1, PIXELFORMAT_PVRTC_4BPP_RGBA_1, PIXELFORMAT_PVRTC_4BPP_RGB_1, PIXELFORMAT_R16F, PIXELFORMAT_R16I, PIXELFORMAT_R16U, PIXELFORMAT_R32F, PIXELFORMAT_R32I, PIXELFORMAT_R32U, PIXELFORMAT_R4_G4_B4_A4, PIXELFORMAT_R5_G5_B5_A1, PIXELFORMAT_R5_G6_B5, PIXELFORMAT_R8, PIXELFORMAT_R8I, PIXELFORMAT_R8U, PIXELFORMAT_R8_G8_B8, PIXELFORMAT_R8_G8_B8_A8, PIXELFORMAT_RG16F, PIXELFORMAT_RG16I, PIXELFORMAT_RG16U, PIXELFORMAT_RG32F, PIXELFORMAT_RG32I, PIXELFORMAT_RG32U, PIXELFORMAT_RG8, PIXELFORMAT_RG8I, PIXELFORMAT_RG8S, PIXELFORMAT_RG8U, PIXELFORMAT_RGB10A2, PIXELFORMAT_RGB10A2U, PIXELFORMAT_RGB16F, PIXELFORMAT_RGB32F, PIXELFORMAT_RGB565, PIXELFORMAT_RGB8, PIXELFORMAT_RGB9E5, PIXELFORMAT_RGBA16F, PIXELFORMAT_RGBA16I, PIXELFORMAT_RGBA16U, PIXELFORMAT_RGBA32F, PIXELFORMAT_RGBA32I, PIXELFORMAT_RGBA32U, PIXELFORMAT_RGBA4, PIXELFORMAT_RGBA5551, PIXELFORMAT_RGBA8, PIXELFORMAT_RGBA8I, PIXELFORMAT_RGBA8S, PIXELFORMAT_RGBA8U, PIXELFORMAT_SBGRA8, PIXELFORMAT_SRGB, PIXELFORMAT_SRGB8, PIXELFORMAT_SRGBA, PIXELFORMAT_SRGBA8, PRIMITIVE_LINELOOP, PRIMITIVE_LINES, PRIMITIVE_LINESTRIP, PRIMITIVE_POINTS, PRIMITIVE_TRIANGLES, PRIMITIVE_TRIFAN, PRIMITIVE_TRISTRIP, PROJECTION_ORTHOGRAPHIC, PROJECTION_PERSPECTIVE, ParticleEmitter, ParticleSystemComponent, ParticleSystemComponentSystem, PhysicsBackend, Picker, Plane, PlaneGeometry, Pose, PostEffect, PostEffectQueue, PreviousTransform, ProgramLibrary, QuadRender, Quat, REFLECTIONSRC_CUBEMAP, REFLECTIONSRC_ENVATLAS, REFLECTIONSRC_ENVATLASHQ, REFLECTIONSRC_NONE, REFLECTIONSRC_SPHEREMAP, RENDERSTYLE_POINTS, RENDERSTYLE_SOLID, RENDERSTYLE_WIREFRAME, RESOLUTION_AUTO, RESOLUTION_FIXED, RIGIDBODY_ACTIVE_TAG, RIGIDBODY_CF_KINEMATIC_OBJECT, RIGIDBODY_CF_NORESPONSE_OBJECT, RIGIDBODY_CF_STATIC_OBJECT, RIGIDBODY_DISABLE_DEACTIVATION, RIGIDBODY_DISABLE_SIMULATION, RIGIDBODY_ISLAND_SLEEPING, RIGIDBODY_TYPE_DYNAMIC, RIGIDBODY_TYPE_KINEMATIC, RIGIDBODY_TYPE_STATIC, RIGIDBODY_WANTS_DEACTIVATION, RapierBackend, RapierCollisionComponent, RapierCollisionComponentSystem, RapierRigidBodyComponent, RapierRigidBodyComponentSystem, Ray, RaycastResult, ReadStream, RenderComponent, RenderComponentSystem, RenderHandler, RenderPass, RenderPassCompose, RenderPassDepthAwareBlur, RenderPassDownsample, RenderPassForward, RenderPassPicker, RenderPassPrepass, RenderPassShaderQuad, RenderPassSsao, RenderPassTAA, RenderPassUpsample, RenderTarget, ResourceHandler, ResourceLoader, RigidBodyComponent, RigidBodyComponentSystem, RotateGizmo, SAMPLETYPE_DEPTH, SAMPLETYPE_FLOAT, SAMPLETYPE_INT, SAMPLETYPE_UINT, SAMPLETYPE_UNFILTERABLE_FLOAT, SCALEMODE_BLEND, SCALEMODE_NONE, SCROLLBAR_VISIBILITY_SHOW_ALWAYS, SCROLLBAR_VISIBILITY_SHOW_WHEN_REQUIRED, SCROLL_MODE_BOUNCE, SCROLL_MODE_CLAMP, SCROLL_MODE_INFINITE, SEMANTIC_ATTR0, SEMANTIC_ATTR1, SEMANTIC_ATTR10, SEMANTIC_ATTR11, SEMANTIC_ATTR12, SEMANTIC_ATTR13, SEMANTIC_ATTR14, SEMANTIC_ATTR15, SEMANTIC_ATTR2, SEMANTIC_ATTR3, SEMANTIC_ATTR4, SEMANTIC_ATTR5, SEMANTIC_ATTR6, SEMANTIC_ATTR7, SEMANTIC_ATTR8, SEMANTIC_ATTR9, SEMANTIC_BLENDINDICES, SEMANTIC_BLENDWEIGHT, SEMANTIC_COLOR, SEMANTIC_NORMAL, SEMANTIC_POSITION, SEMANTIC_TANGENT, SEMANTIC_TEXCOORD, SEMANTIC_TEXCOORD0, SEMANTIC_TEXCOORD1, SEMANTIC_TEXCOORD2, SEMANTIC_TEXCOORD3, SEMANTIC_TEXCOORD4, SEMANTIC_TEXCOORD5, SEMANTIC_TEXCOORD6, SEMANTIC_TEXCOORD7, SHADERDEF_BATCH, SHADERDEF_DIRLM, SHADERDEF_INSTANCING, SHADERDEF_LM, SHADERDEF_LMAMBIENT, SHADERDEF_MORPH_NORMAL, SHADERDEF_MORPH_POSITION, SHADERDEF_MORPH_TEXTURE_BASED_INT, SHADERDEF_NOSHADOW, SHADERDEF_SCREENSPACE, SHADERDEF_SKIN, SHADERDEF_TANGENTS, SHADERDEF_UV0, SHADERDEF_UV1, SHADERDEF_VCOLOR, SHADERLANGUAGE_GLSL, SHADERLANGUAGE_WGSL, SHADERPASS_ALBEDO, SHADERPASS_AO, SHADERPASS_EMISSION, SHADERPASS_FORWARD, SHADERPASS_GLOSS, SHADERPASS_LIGHTING, SHADERPASS_METALNESS, SHADERPASS_OPACITY, SHADERPASS_SPECULARITY, SHADERPASS_UV0, SHADERPASS_WORLDNORMAL, SHADERSTAGE_COMPUTE, SHADERSTAGE_FRAGMENT, SHADERSTAGE_VERTEX, SHADERTAG_MATERIAL, SHADER_DEPTH_PICK, SHADER_FORWARD, SHADER_PICK, SHADER_PREPASS, SHADER_SHADOW, SHADOWCAMERA_NAME, SHADOWUPDATE_NONE, SHADOWUPDATE_REALTIME, SHADOWUPDATE_THISFRAME, SHADOW_CASCADE_0, SHADOW_CASCADE_1, SHADOW_CASCADE_2, SHADOW_CASCADE_3, SHADOW_CASCADE_ALL, SHADOW_PCF1, SHADOW_PCF1_16F, SHADOW_PCF1_32F, SHADOW_PCF3, SHADOW_PCF3_16F, SHADOW_PCF3_32F, SHADOW_PCF5, SHADOW_PCF5_16F, SHADOW_PCF5_32F, SHADOW_PCSS_32F, SHADOW_VSM16, SHADOW_VSM32, SHADOW_VSM_16F, SHADOW_VSM_32F, SKYTYPE_BOX, SKYTYPE_DOME, SKYTYPE_INFINITE, SORTMODE_BACK2FRONT, SORTMODE_CUSTOM, SORTMODE_FRONT2BACK, SORTMODE_MANUAL, SORTMODE_MATERIALMESH, SORTMODE_NONE, SPECOCC_AO, SPECOCC_GLOSSDEPENDENT, SPECOCC_NONE, SPRITETYPE_ANIMATED, SPRITETYPE_SIMPLE, SPRITE_RENDERMODE_SIMPLE, SPRITE_RENDERMODE_SLICED, SPRITE_RENDERMODE_TILED, SSAOTYPE_COMBINE, SSAOTYPE_LIGHTING, SSAOTYPE_NONE, STENCILOP_DECREMENT, STENCILOP_DECREMENTWRAP, STENCILOP_INCREMENT, STENCILOP_INCREMENTWRAP, STENCILOP_INVERT, STENCILOP_KEEP, STENCILOP_REPLACE, STENCILOP_ZERO, ScaleGizmo, Scene, SceneHandler, SceneRegistry, SceneRegistryItem, SceneSettingsHandler, ScopeId, ScopeSpace, ScreenComponent, ScreenComponentSystem, Script, ScriptAttributes, ScriptComponent, ScriptComponentSystem, ScriptHandler, ScriptRegistry, ScriptType, ScrollViewComponent, ScrollViewComponentSystem, ScrollbarComponent, ScrollbarComponentSystem, SeededRandom, Shader, ShaderChunks, ShaderHandler, ShaderMaterial, ShaderPass, ShaderUtils, SingleContactResult, SingleGestureSource, Skeleton, Skin, SkinBatchInstance, SkinInstance, Sky, SortedLoopArray, Sound, SoundComponent, SoundComponentSystem, SoundInstance, SoundInstance3d, SoundManager, SoundSlot, SphereGeometry, Sprite, SpriteAnimationClip, SpriteComponent, SpriteComponentSystem, SpriteHandler, StandardMaterial, StandardMaterialOptions, StencilParameters, StorageBuffer, TEXHINT_ASSET, TEXHINT_LIGHTMAP, TEXHINT_NONE, TEXHINT_SHADOWMAP, TEXPROPERTY_ADDRESS_U, TEXPROPERTY_ADDRESS_V, TEXPROPERTY_ADDRESS_W, TEXPROPERTY_ALL, TEXPROPERTY_ANISOTROPY, TEXPROPERTY_COMPARE_FUNC, TEXPROPERTY_COMPARE_ON_READ, TEXPROPERTY_MAG_FILTER, TEXPROPERTY_MIN_FILTER, TEXTUREDIMENSION_1D, TEXTUREDIMENSION_2D, TEXTUREDIMENSION_2D_ARRAY, TEXTUREDIMENSION_3D, TEXTUREDIMENSION_CUBE, TEXTUREDIMENSION_CUBE_ARRAY, TEXTURELOCK_NONE, TEXTURELOCK_READ, TEXTURELOCK_WRITE, TEXTUREPROJECTION_CUBE, TEXTUREPROJECTION_EQUIRECT, TEXTUREPROJECTION_NONE, TEXTUREPROJECTION_OCTAHEDRAL, TEXTURETYPE_DEFAULT, TEXTURETYPE_RGBE, TEXTURETYPE_RGBM, TEXTURETYPE_RGBP, TEXTURETYPE_SWIZZLEGGGR, TONEMAP_ACES, TONEMAP_ACES2, TONEMAP_FILMIC, TONEMAP_HEJL, TONEMAP_LINEAR, TONEMAP_NEUTRAL, TONEMAP_NONE, TRACEID_ASSETS, TRACEID_BINDGROUPFORMAT_ALLOC, TRACEID_BINDGROUP_ALLOC, TRACEID_COMPUTEPIPELINE_ALLOC, TRACEID_ELEMENT, TRACEID_GPU_TIMINGS, TRACEID_OCTREE_RESOURCES, TRACEID_PIPELINELAYOUT_ALLOC, TRACEID_RENDERPIPELINE_ALLOC, TRACEID_RENDER_ACTION, TRACEID_RENDER_FRAME, TRACEID_RENDER_FRAME_TIME, TRACEID_RENDER_PASS, TRACEID_RENDER_PASS_DETAIL, TRACEID_RENDER_QUEUE, TRACEID_RENDER_TARGET_ALLOC, TRACEID_SHADER_ALLOC, TRACEID_SHADER_COMPILE, TRACEID_TEXTURES, TRACEID_TEXTURE_ALLOC, TRACEID_VRAM_IB, TRACEID_VRAM_SB, TRACEID_VRAM_TEXTURE, TRACEID_VRAM_VB, TYPE_FLOAT16, TYPE_FLOAT32, TYPE_INT16, TYPE_INT32, TYPE_INT8, TYPE_UINT16, TYPE_UINT32, TYPE_UINT8, Tags, Template, TemplateHandler, TextElement, TextHandler, Texture, TextureAtlas, TextureAtlasHandler, TextureHandler, TextureUtils, TextureView, TorusGeometry, Touch, TouchDevice, TouchEvent, Tracing, TransformFeedback, TransformGizmo, TransformInterpolator, TranslateGizmo, Tri, UNIFORMTYPE_BOOL, UNIFORMTYPE_BOOLARRAY, UNIFORMTYPE_BVEC2, UNIFORMTYPE_BVEC2ARRAY, UNIFORMTYPE_BVEC3, UNIFORMTYPE_BVEC3ARRAY, UNIFORMTYPE_BVEC4, UNIFORMTYPE_BVEC4ARRAY, UNIFORMTYPE_FLOAT, UNIFORMTYPE_FLOATARRAY, UNIFORMTYPE_INT, UNIFORMTYPE_INTARRAY, UNIFORMTYPE_ITEXTURE2D, UNIFORMTYPE_ITEXTURE2D_ARRAY, UNIFORMTYPE_ITEXTURE3D, UNIFORMTYPE_ITEXTURECUBE, UNIFORMTYPE_IVEC2, UNIFORMTYPE_IVEC2ARRAY, UNIFORMTYPE_IVEC3, UNIFORMTYPE_IVEC3ARRAY, UNIFORMTYPE_IVEC4, UNIFORMTYPE_IVEC4ARRAY, UNIFORMTYPE_MAT2, UNIFORMTYPE_MAT3, UNIFORMTYPE_MAT4, UNIFORMTYPE_MAT4ARRAY, UNIFORMTYPE_TEXTURE2D, UNIFORMTYPE_TEXTURE2D_ARRAY, UNIFORMTYPE_TEXTURE2D_SHADOW, UNIFORMTYPE_TEXTURE3D, UNIFORMTYPE_TEXTURECUBE, UNIFORMTYPE_TEXTURECUBE_SHADOW, UNIFORMTYPE_UINT, UNIFORMTYPE_UINTARRAY, UNIFORMTYPE_UTEXTURE2D, UNIFORMTYPE_UTEXTURE2D_ARRAY, UNIFORMTYPE_UTEXTURE3D, UNIFORMTYPE_UTEXTURECUBE, UNIFORMTYPE_UVEC2, UNIFORMTYPE_UVEC2ARRAY, UNIFORMTYPE_UVEC3, UNIFORMTYPE_UVEC3ARRAY, UNIFORMTYPE_UVEC4, UNIFORMTYPE_UVEC4ARRAY, UNIFORMTYPE_VEC2, UNIFORMTYPE_VEC2ARRAY, UNIFORMTYPE_VEC3, UNIFORMTYPE_VEC3ARRAY, UNIFORMTYPE_VEC4, UNIFORMTYPE_VEC4ARRAY, UNIFORM_BUFFER_DEFAULT_SLOT_NAME, UNUSED_UNIFORM_NAME, URI, UniformBufferFormat, UniformFormat, UsdzExporter, VIEW_CENTER, VIEW_LEFT, VIEW_RIGHT, Vec2, Vec3, Vec4, VertexBuffer, VertexFormat, VertexIterator, ViewCube, WORKBUFFER_UPDATE_ALWAYS, WORKBUFFER_UPDATE_AUTO, WORKBUFFER_UPDATE_ONCE, WasmModule, WebglGraphicsDevice, WebgpuGraphicsDevice, WorldClusters, XRDEPTHSENSINGFORMAT_F32, XRDEPTHSENSINGFORMAT_L8A8, XRDEPTHSENSINGFORMAT_R16U, XRDEPTHSENSINGUSAGE_CPU, XRDEPTHSENSINGUSAGE_GPU, XREYE_LEFT, XREYE_NONE, XREYE_RIGHT, XRHAND_LEFT, XRHAND_NONE, XRHAND_RIGHT, XRPAD_A, XRPAD_B, XRPAD_SQUEEZE, XRPAD_STICK_BUTTON, XRPAD_STICK_X, XRPAD_STICK_Y, XRPAD_TOUCHPAD_BUTTON, XRPAD_TOUCHPAD_X, XRPAD_TOUCHPAD_Y, XRPAD_TRIGGER, XRSPACE_BOUNDEDFLOOR, XRSPACE_LOCAL, XRSPACE_LOCALFLOOR, XRSPACE_UNBOUNDED, XRSPACE_VIEWER, XRTARGETRAY_GAZE, XRTARGETRAY_POINTER, XRTARGETRAY_SCREEN, XRTRACKABLE_MESH, XRTRACKABLE_PLANE, XRTRACKABLE_POINT, XRTYPE_AR, XRTYPE_INLINE, XRTYPE_VR, XrAnchor, XrAnchors, XrDomOverlay, XrFinger, XrHand, XrHitTest, XrHitTestSource, XrImageTracking, XrInput, XrInputSource, XrJoint, XrLightEstimation, XrManager, XrMeshDetection, XrPlane, XrPlaneDetection, XrTrackedImage, XrView, XrViews, ZoneComponent, ZoneComponentSystem, ambientSrcNames, app, basisInitialize, bindGroupNames, blendNames, calculateNormals, calculateTangents, createBox, createCapsule, createCone, createCylinder, createGraphicsDevice, createMesh, createPlane, createScript, createShader, createShaderFromCode, createSphere, createTorus, createURI, cubemaProjectionNames, ditherNames, dracoDecode, dracoInitialize, drawFullscreenQuad, drawQuadWithShader, extend, fresnelNames, gammaNames, getGlslShaderType, getPixelFormatArrayType, getReservedScriptNames, getTouchTargetCoords, getWgslShaderType, guid, http, indexFormatByteSize, isCompressedPixelFormat, isIntegerPixelFormat, isSrgbPixelFormat, lightFalloffNames, lightShapeNames, lightTypeNames, math, now, path, pixelFormatGammaToLinear, pixelFormatInfo, pixelFormatLinearToGamma, platform, primitiveGlslToWgslTypeMap, reflectionSrcNames, registerScript, reprojectTexture, requiresManualGamma, revision, script, semanticToLocation, shaderChunks, shadowTypeInfo, specularOcclusionNames, spriteRenderModeNames, string, tonemapNames, typedArrayIndexFormats, typedArrayIndexFormatsByteSize, typedArrayToType, typedArrayTypes, typedArrayTypesByteSize, uniformTypeToName, uniformTypeToNameMapWGSL, uniformTypeToNameWGSL, uniformTypeToStorage, version, vertexTypesNames };
 export as namespace pc;
 export as namespace pcx;
