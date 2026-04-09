@@ -1,0 +1,10 @@
+:5555 {
+	root * /home/selstad/Desktop/InfinityCanvas/playcanvas-engine/examples/dist
+	file_server {
+		index index.html
+	}
+	header {
+		Access-Control-Allow-Origin *
+		-Server
+	}
+}

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Engine Fork - Physics Comparison</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-bottom: 1px solid #2a2a4a;
+            padding: 24px 40px;
+        }
+        header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        header h1 span { color: #6c63ff; }
+        header p {
+            font-size: 14px;
+            color: #888;
+        }
+        .badges {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-ammo { background: #2d1f1f; color: #ff6b6b; border: 1px solid #3d2f2f; }
+        .badge-deterministic { background: #1f2d1f; color: #6bff6b; border: 1px solid #2f3d2f; }
+        .badge-rapier { background: #1f1f2d; color: #6b6bff; border: 1px solid #2f2f3d; }
+        .badge-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .badge-ammo .badge-dot { background: #ff6b6b; }
+        .badge-deterministic .badge-dot { background: #6bff6b; }
+        .badge-rapier .badge-dot { background: #6b6bff; }
+
+        main { padding: 32px 40px; }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #aaa;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: #12121a;
+            border: 1px solid #1e1e30;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: #6c63ff;
+            box-shadow: 0 8px 32px rgba(108, 99, 255, 0.15);
+        }
+
+        .card-preview {
+            height: 220px;
+            position: relative;
+            background: #0e0e16;
+        }
+        .card-preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            pointer-events: none;
+        }
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent 60%, rgba(0,0,0,0.8));
+        }
+
+        .card-body { padding: 16px; }
+        .card-body h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .card-body p {
+            font-size: 13px;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        .card-footer {
+            padding: 12px 16px;
+            border-top: 1px solid #1e1e30;
+            display: flex;
+            gap: 8px;
+        }
+
+        .info-box {
+            background: #12121a;
+            border: 1px solid #1e1e30;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .info-box h3 { color: #fff; margin-bottom: 8px; }
+        .info-box p { color: #888; font-size: 14px; line-height: 1.6; }
+        .info-box code {
+            background: #1a1a2e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #6c63ff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><span>Infinity Engine</span> Physics Comparison</h1>
+        <p>PlayCanvas fork with deterministic simulation &mdash; toggle between standard and fixed-timestep physics</p>
+        <div class="badges">
+            <span class="badge badge-ammo"><span class="badge-dot"></span> Ammo.js (Standard)</span>
+            <span class="badge badge-deterministic"><span class="badge-dot"></span> Ammo.js (Deterministic)</span>
+            <span class="badge badge-rapier"><span class="badge-dot"></span> Rapier3D (Future)</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="info-box">
+            <h3>How the toggle works</h3>
+            <p>
+                Each demo starts in <strong>Standard mode</strong> (PlayCanvas default: variable-rate Ammo.js physics).
+                Toggle to <strong>Deterministic mode</strong> to switch to fixed-timestep (60Hz) physics with
+                render interpolation. Same Ammo.js engine, but physics steps at exactly <code>1/60s</code>
+                regardless of frame rate &mdash; essential for replays and rollback networking.
+                The toggle calls <code>app.enableDeterministicSimulation()</code> from our fork.
+            </p>
+        </div>
+
+        <h2 class="section-title">Physics Demos</h2>
+        <div class="grid">
+            <a class="card" href="demo/?example=physics_falling-shapes">
+                <div class="card-preview">
+                    <div class="card-overlay"></div>
+                </div>
+                <div class="card-body">
+                    <h3>Falling Shapes</h3>
+                    <p>Multiple collision primitives (box, sphere, capsule, cylinder, mesh) falling onto a static floor with restitution. 40 objects spawn over 8 seconds.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="badge badge-ammo"><span class="badge-dot"></span> Ammo.js</span>
+                    <span class="badge badge-deterministic"><span class="badge-dot"></span> Deterministic</span>
+                </div>
+            </a>
+
+            <a class="card" href="demo/?example=physics_compound-collision">
+                <div class="card-preview">
+                    <div class="card-overlay"></div>
+                </div>
+                <div class="card-body">
+                    <h3>Compound Collision</h3>
+                    <p>Complex compound collision shapes (chairs with seat, back, and legs). 20 chairs spawn and pile up with realistic stacking physics.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="badge badge-ammo"><span class="badge-dot"></span> Ammo.js</span>
+                    <span class="badge badge-deterministic"><span class="badge-dot"></span> Deterministic</span>
+                </div>
+            </a>
+
+            <a class="card" href="demo/?example=physics_raycast">
+                <div class="card-preview">
+                    <div class="card-overlay"></div>
+                </div>
+                <div class="card-body">
+                    <h3>Raycast</h3>
+                    <p>Physics raycasting with single and batch queries. Animated rays sweep across geometric shapes, showing hit points and normals.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="badge badge-ammo"><span class="badge-dot"></span> Ammo.js</span>
+                    <span class="badge badge-deterministic"><span class="badge-dot"></span> Deterministic</span>
+                </div>
+            </a>
+
+            <a class="card" href="demo/?example=physics_vehicle">
+                <div class="card-preview">
+                    <div class="card-overlay"></div>
+                </div>
+                <div class="card-body">
+                    <h3>Vehicle Physics</h3>
+                    <p>Raycast vehicle with steering, acceleration, and wheel suspension. Smash through blocks. Uses Ammo.js btRaycastVehicle directly.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="badge badge-ammo"><span class="badge-dot"></span> Ammo.js</span>
+                    <span class="badge badge-deterministic"><span class="badge-dot"></span> Deterministic</span>
+                </div>
+            </a>
+
+            <a class="card" href="demo/?example=physics_offset-collision">
+                <div class="card-preview">
+                    <div class="card-overlay"></div>
+                </div>
+                <div class="card-body">
+                    <h3>Offset Collision</h3>
+                    <p>Collision shape offsets for character models. Shows how to position collision shapes relative to the entity origin for animated characters.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="badge badge-ammo"><span class="badge-dot"></span> Ammo.js</span>
+                    <span class="badge badge-deterministic"><span class="badge-dot"></span> Deterministic</span>
+                </div>
+            </a>
+        </div>
+    </main>
+</body>
+</html>

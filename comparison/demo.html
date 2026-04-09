@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Comparison</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0f;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #demo-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Floating control panel */
+        .controls {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 1000;
+            background: rgba(18, 18, 26, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 16px;
+            min-width: 280px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        .controls h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .controls-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #6c63ff;
+            text-decoration: none;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+        .controls-back:hover { color: #8b83ff; }
+
+        .mode-btn {
+            display: block;
+            width: 100%;
+            padding: 10px 14px;
+            margin-bottom: 6px;
+            border: 1px solid #2a2a4a;
+            border-radius: 8px;
+            background: transparent;
+            color: #aaa;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s;
+        }
+        .mode-btn:hover { border-color: #4a4a6a; color: #ddd; }
+        .mode-btn.active {
+            border-color: #6c63ff;
+            background: rgba(108, 99, 255, 0.1);
+            color: #fff;
+        }
+        .mode-btn .mode-dot {
+            display: inline-block;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .mode-btn[data-mode="standard"] .mode-dot { background: #ff6b6b; }
+        .mode-btn[data-mode="deterministic"] .mode-dot { background: #6bff6b; }
+
+        .mode-desc {
+            font-size: 11px;
+            color: #666;
+            margin-left: 16px;
+            margin-top: 2px;
+        }
+
+        .stats {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #1e1e30;
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            font-size: 12px;
+        }
+        .stat-label { color: #666; }
+        .stat-value { color: #ccc; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; }
+        .stat-value.active { color: #6bff6b; }
+        .stat-value.inactive { color: #ff6b6b; }
+
+        .restart-btn {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-top: 12px;
+            border: 1px solid #2a2a4a;
+            border-radius: 8px;
+            background: transparent;
+            color: #888;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .restart-btn:hover {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .demo-title {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 1000;
+            background: rgba(18, 18, 26, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid #2a2a4a;
+            border-radius: 8px;
+            padding: 8px 14px;
+        }
+        .demo-title h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .demo-title span {
+            font-size: 11px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="demo-frame" src=""></iframe>
+
+    <div class="demo-title">
+        <h2 id="title">Loading...</h2>
+        <span id="subtitle"></span>
+    </div>
+
+    <div class="controls">
+        <a class="controls-back" href="index.html">&larr; All Demos</a>
+        <h3>Physics Mode</h3>
+
+        <button class="mode-btn active" data-mode="standard" onclick="setMode('standard')">
+            <span class="mode-dot"></span>Standard (Variable dt)
+            <div class="mode-desc">PlayCanvas default &mdash; physics steps with frame delta</div>
+        </button>
+
+        <button class="mode-btn" data-mode="deterministic" onclick="setMode('deterministic')">
+            <span class="mode-dot"></span>Deterministic (Fixed 60Hz)
+            <div class="mode-desc">Fixed timestep with render interpolation</div>
+        </button>
+
+        <div class="stats">
+            <div class="stat-row">
+                <span class="stat-label">Mode</span>
+                <span class="stat-value" id="stat-mode">Standard</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Fixed Timestep</span>
+                <span class="stat-value inactive" id="stat-fixed">OFF</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Interpolation</span>
+                <span class="stat-value inactive" id="stat-interp">OFF</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">PRNG Seed</span>
+                <span class="stat-value" id="stat-seed">N/A</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Sim Tick</span>
+                <span class="stat-value" id="stat-tick">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">FPS</span>
+                <span class="stat-value" id="stat-fps">--</span>
+            </div>
+        </div>
+
+        <button class="restart-btn" onclick="restartDemo()">Restart Scene</button>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const example = params.get('example') || 'physics_falling-shapes';
+
+        // Set title
+        const name = example.replace('physics_', '').replace(/-/g, ' ')
+            .replace(/\b\w/g, c => c.toUpperCase());
+        document.getElementById('title').textContent = name;
+        document.getElementById('subtitle').textContent = 'Physics Demo';
+
+        // Load the example iframe
+        const frame = document.getElementById('demo-frame');
+        frame.src = `../iframe/${example}.html`;
+
+        let currentMode = 'standard';
+        let pollInterval = null;
+
+        function getApp() {
+            try {
+                return frame.contentWindow?.pc?.app ||
+                       frame.contentWindow?.app ||
+                       null;
+            } catch(e) {
+                return null;
+            }
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+
+            // Update button states
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+
+            const app = getApp();
+            if (!app) {
+                console.warn('App not ready yet');
+                return;
+            }
+
+            if (mode === 'deterministic') {
+                if (!app.deterministic || !app.deterministic.enabled) {
+                    app.enableDeterministicSimulation({
+                        seed: 42,
+                        simulationRate: 60,
+                        enableInterpolation: true
+                    });
+                }
+                document.getElementById('stat-mode').textContent = 'Deterministic';
+                document.getElementById('stat-fixed').textContent = '60Hz';
+                document.getElementById('stat-fixed').className = 'stat-value active';
+                document.getElementById('stat-interp').textContent = 'ON';
+                document.getElementById('stat-interp').className = 'stat-value active';
+                document.getElementById('stat-seed').textContent = '42';
+            } else {
+                if (app.deterministic && app.deterministic.enabled) {
+                    app.disableDeterministicSimulation();
+                }
+                document.getElementById('stat-mode').textContent = 'Standard';
+                document.getElementById('stat-fixed').textContent = 'OFF';
+                document.getElementById('stat-fixed').className = 'stat-value inactive';
+                document.getElementById('stat-interp').textContent = 'OFF';
+                document.getElementById('stat-interp').className = 'stat-value inactive';
+                document.getElementById('stat-seed').textContent = 'N/A';
+            }
+        }
+
+        function restartDemo() {
+            frame.src = frame.src;
+            // Re-apply mode after reload
+            frame.onload = () => {
+                setTimeout(() => {
+                    if (currentMode === 'deterministic') {
+                        setMode('deterministic');
+                    }
+                }, 1500); // Wait for app to initialize
+            };
+        }
+
+        // Poll for stats
+        function startStatsPoll() {
+            if (pollInterval) clearInterval(pollInterval);
+            pollInterval = setInterval(() => {
+                const app = getApp();
+                if (!app) return;
+
+                // FPS
+                const fps = app.stats?.frame?.fps;
+                if (fps !== undefined) {
+                    document.getElementById('stat-fps').textContent = Math.round(fps);
+                }
+
+                // Tick count
+                if (app.deterministic && app.deterministic.enabled) {
+                    document.getElementById('stat-tick').textContent = app.deterministic.tick;
+                } else {
+                    document.getElementById('stat-tick').textContent = app.frame || 0;
+                }
+            }, 200);
+        }
+
+        frame.addEventListener('load', () => {
+            setTimeout(startStatsPoll, 1000);
+        });
+    </script>
+</body>
+</html>
